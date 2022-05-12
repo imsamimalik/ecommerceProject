@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const Products = require("./routes/Products");
 const Category = require("./routes/Category");
 const dbConnect = require("./dbConnect");
@@ -8,13 +9,15 @@ const registerUser = require("./routes/Users/registerUser");
 const PORT = process.env.PORT || 3001;
 const app = express();
 
+app.use(cors());
+
 app.set("db", dbConnect.connect());
 app.use(express.json({ limit: "100mb" }));
 
-app.use("/", Products);
-app.use("/category", Category);
-app.use("/register", registerUser);
-app.use("/login", loginUser);
+app.use("/api", Products);
+app.use("/api/category", Category);
+app.use("/api/register", registerUser);
+app.use("/api/login", loginUser);
 
 app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
