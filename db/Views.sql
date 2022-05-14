@@ -24,7 +24,7 @@ go
 
 create view singleProductView
 as
-	select P.ID as productID, P.name as productName, P.description as productDescription,
+	select P.ID as productID, P.name as productName, P.unitPrice, P.description as productDescription,
 	P.quantityInStock as productQuantity, P.imgURL, C.ID as catID, C.name as catName
 	from Product P join Category C on P.catID = C.ID
 go

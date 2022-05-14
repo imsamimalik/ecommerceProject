@@ -68,7 +68,7 @@ export default function SignIn() {
                             height: 60,
                         }}
                     >
-                        <LockOutlinedIcon />
+                        <LockOutlinedIcon fontSize="large" />
                     </Avatar>
                     <Typography sx={{ mt: 3 }} component="h1" variant="h4">
                         Log in

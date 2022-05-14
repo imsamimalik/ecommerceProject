@@ -60,7 +60,7 @@ export default function SignIn() {
             <Container component="main" maxWidth="sm">
                 <Box
                     sx={{
-                        marginTop: 15,
+                        marginTop: 12,
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
@@ -74,7 +74,7 @@ export default function SignIn() {
                             height: 60,
                         }}
                     >
-                        <AccountCircleIcon />
+                        <AccountCircleIcon fontSize="large" />
                     </Avatar>
 
                     <Typography
@@ -96,13 +96,13 @@ export default function SignIn() {
                                 alignItems: "center",
                                 justifyContent: "space-between",
                                 flex: 1,
+                                marginTop: "10px",
                             }}
                         >
                             <TextField
-                                margin="normal"
                                 required
                                 fullWidth
-                                id="name"
+                                variant="standard"
                                 label="Full Name"
                                 name="name"
                                 autoFocus
@@ -111,10 +111,9 @@ export default function SignIn() {
                                 }}
                             />
                             <TextField
-                                margin="normal"
                                 required
                                 fullWidth
-                                id="username"
+                                variant="standard"
                                 label="Username"
                                 name="username"
                                 sx={{
@@ -123,24 +122,28 @@ export default function SignIn() {
                             />
                         </Box>
                         <TextField
-                            margin="normal"
                             required
                             fullWidth
-                            id="email"
+                            variant="standard"
                             type="email"
                             label="Email Address"
                             name="email"
                             autoComplete="email"
+                            sx={{
+                                marginTop: "20px",
+                            }}
                         />
                         <TextField
-                            margin="normal"
                             required
                             fullWidth
+                            variant="standard"
                             name="password"
                             label="Password"
                             type="password"
-                            id="password"
                             autoComplete="password"
+                            sx={{
+                                marginTop: "30px",
+                            }}
                         />
                         <Box
                             sx={{
@@ -148,27 +151,26 @@ export default function SignIn() {
                                 alignItems: "center",
                                 justifyContent: "space-between",
                                 flex: 1,
+                                marginTop: "20px",
                             }}
                         >
                             <TextField
-                                margin="normal"
                                 required
                                 fullWidth
+                                variant="standard"
                                 name="address"
                                 label="Address"
-                                id="address"
                                 sx={{
                                     width: "49%",
                                 }}
                             />
                             <TextField
-                                margin="normal"
                                 required
                                 fullWidth
+                                variant="standard"
                                 type="number"
                                 name="postalCode"
                                 label="Postal Code"
-                                id="postalCode"
                                 sx={{
                                     width: "49%",
                                 }}

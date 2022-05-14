@@ -283,24 +283,16 @@ create procedure addToWishlist
 as
 begin
 
-	if (exists(select ID from Product where ID = @pid) 
-		and
-		exists(select ID from [Users] where ID = @uid)
-	)
+	if(not exists(select ID from Wishlist where productID = @pid and userID= @uid))
 	begin
 		insert into Wishlist (productID, userID) values
 		(@pid,@uid)
 		print 'added to wishlist'
 		set @out = 0
 	end
-	else if(not exists(select ID from Product where ID = @pid))
-	begin
-		print 'product failed to be added to wishlist'
-		set @out = 1
-	end
 	else
 	begin
-		print 'invalid user id'
+		print 'already there'
 		set @out = 1
 	end
 end

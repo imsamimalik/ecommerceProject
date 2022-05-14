@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -19,7 +19,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link } from "react-router-dom";
 
 const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Logout"];
+const settings = ["Profile", "Wishlist", "Login"];
 
 const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -72,9 +72,13 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     },
 }));
 
-const ResponsiveAppBar = () => {
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
+const Navbar = ({ user, countCart }) => {
+    const [anchorElNav, setAnchorElNav] = useState(
+        document.querySelector("body")
+    );
+    const [anchorElUser, setAnchorElUser] = useState(
+        document.querySelector("body")
+    );
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -194,7 +198,10 @@ const ResponsiveAppBar = () => {
                     {/* CART ICON */}
                     <Box sx={{ flexGrow: 0, mx: { xs: "13px", md: "20px" } }}>
                         <IconButton size="large">
-                            <StyledBadge badgeContent={1} color="success">
+                            <StyledBadge
+                                badgeContent={countCart}
+                                color="success"
+                            >
                                 <ShoppingCartIcon sx={{ color: "#fff" }} />
                             </StyledBadge>
                         </IconButton>
@@ -229,14 +236,19 @@ const ResponsiveAppBar = () => {
                             onClose={handleCloseUserMenu}
                         >
                             {settings.map((setting) => (
-                                <MenuItem
+                                <Link
+                                    to={`${setting.toLowerCase()}`}
                                     key={setting}
-                                    onClick={handleCloseUserMenu}
                                 >
-                                    <Typography textAlign="center">
-                                        {setting}
-                                    </Typography>
-                                </MenuItem>
+                                    <MenuItem onClick={handleCloseUserMenu}>
+                                        <Typography
+                                            textAlign="center"
+                                            color="primary.main"
+                                        >
+                                            {setting}
+                                        </Typography>
+                                    </MenuItem>
+                                </Link>
                             ))}
                         </Menu>
                     </Box>
@@ -245,4 +257,4 @@ const ResponsiveAppBar = () => {
         </AppBar>
     );
 };
-export default ResponsiveAppBar;
+export default Navbar;
