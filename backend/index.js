@@ -1,8 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const dbConnect = require("./dbConnect");
+
 const Products = require("./routes/Products");
 const singleProduct = require("./routes/Products/singleProduct");
+const deleteProduct = require("./routes/Products/deleteProduct");
+const addProduct = require("./routes/Products/addProduct");
+
 const Category = require("./routes/Category");
 const loginUser = require("./routes/Users/loginUser");
 const registerUser = require("./routes/Users/registerUser");
@@ -27,6 +31,8 @@ app.use(express.json({ limit: "100mb" }));
 
 app.use("/api", Products);
 app.use("/api/singleProduct", singleProduct);
+app.use("/api/product/delete", deleteProduct);
+app.use("/api/product/add", addProduct);
 
 app.use("/api/category", Category);
 

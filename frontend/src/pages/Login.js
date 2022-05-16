@@ -17,7 +17,7 @@ import axios from "../lib/axios";
 import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
-export default function SignIn() {
+export default function SignIn({ setUsername }) {
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -40,8 +40,10 @@ export default function SignIn() {
                 setTimeout(() => {
                     setError(false);
                 }, 1000);
+                return;
             }
             localStorage.setItem("username", username);
+            setUsername(username);
             navigate("/");
         } catch (error) {
             console.log(error);

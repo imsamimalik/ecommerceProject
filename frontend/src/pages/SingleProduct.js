@@ -6,17 +6,36 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { QuantityPicker } from "react-qty-picker";
 import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
 
-const SingleProduct = () => {
+const SingleProduct = ({ fetchCount }) => {
     let { id } = useParams();
     const [product, setProduct] = useState({});
-    const [, setValue] = useState(1);
+    const [value, setValue] = useState(1);
+    const [open, setOpen] = useState(false);
+
+    let username = localStorage.getItem("username");
 
     const fetchProduct = useCallback(async () => {
         const result = await axios.post(`/api/singleProduct`, { id });
         setProduct(result.data[0]);
         console.log(result.data[0]);
     }, [id]);
+
+    const addToCart = useCallback(async () => {
+        const result = await axios.post("/api/cart/add", {
+            productID: id,
+            username,
+            quantity: value,
+        });
+        if (result.data.output === 0) {
+            setOpen(true);
+
+            setTimeout(() => {
+                setOpen(false);
+            }, 1000);
+        }
+    }, [id, username, value]);
 
     useEffect(() => {
         fetchProduct();
@@ -74,7 +93,12 @@ const SingleProduct = () => {
                         //  display: "flex", justifyContent: "center"
                     }}
                 >
-                    <Button fullWidth size="large" variant="contained">
+                    <Button
+                        fullWidth
+                        size="large"
+                        variant="contained"
+                        onClick={() => addToCart().then(() => fetchCount())}
+                    >
                         Add to cart
                     </Button>
                 </Box>
@@ -92,6 +116,7 @@ const SingleProduct = () => {
                     elit.
                 </Typography>
             </Box>
+            <Snackbar open={open} message="added to cart" />
         </Container>
     );
 };

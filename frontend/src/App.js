@@ -39,14 +39,24 @@ function App() {
         <div className="app">
             <CssBaseline />
             <Router>
-                <Navbar username={username} countCart={totalCart} />
+                <Navbar
+                    setUsername={setUsername}
+                    username={username}
+                    countCart={totalCart}
+                />
                 <Routes>
-                    <Route exact path="/login" element={<Login />} />
+                    <Route
+                        exact
+                        path="/login"
+                        element={<Login setUsername={setUsername} />}
+                    />
                     <Route exact path="/register" element={<Register />} />
                     <Route
                         exact
                         path="/product/:id"
-                        element={<SingleProduct />}
+                        element={
+                            <SingleProduct fetchCount={fetchCountOfCart} />
+                        }
                     />
                     <Route exact path="/profile" element={<Profile />} />
                     <Route exact path="/wishlist" element={<Wishlist />} />

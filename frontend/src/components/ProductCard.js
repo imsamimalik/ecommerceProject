@@ -21,8 +21,9 @@ export default function ProductCard({
     productID,
     catID,
     imgURL,
-    user,
+    username,
     fetchCount,
+    fetchProducts,
 }) {
     const [open, setOpen] = useState(false);
     const [text, setText] = useState("added to wishlist");
@@ -30,7 +31,7 @@ export default function ProductCard({
     const addToWishlist = useCallback(async () => {
         const result = await axios.post("/api/wishlist/add", {
             productID,
-            username: user,
+            username,
         });
         if (result.data.output === 1) {
             setText("already in wishlist");
@@ -42,15 +43,15 @@ export default function ProductCard({
         setTimeout(() => {
             setOpen(false);
         }, 1000);
-    }, [productID, user]);
+    }, [productID, username]);
 
     const addToCart = useCallback(async () => {
         const result = await axios.post("/api/cart/add", {
             productID,
-            username: user,
+            username,
             quantity: 1,
         });
-        if (result.data.output === 1) {
+        if (result.data.output !== 0) {
             setText("already in cart");
         } else {
             setText("added to cart");
@@ -60,16 +61,40 @@ export default function ProductCard({
         setTimeout(() => {
             setOpen(false);
         }, 1000);
-    }, [productID, user]);
+    }, [productID, username]);
+
+    const deleteProduct = useCallback(async () => {
+        const result = await axios.delete("/api/product/delete", {
+            data: {
+                productID,
+                username,
+            },
+        });
+
+        if (result.data.output !== 0) {
+            setText("unable to delete product");
+        } else {
+            setText("product deleted");
+        }
+        setOpen(true);
+
+        setTimeout(() => {
+            setOpen(false);
+        }, 1000);
+    }, [productID, username]);
 
     useEffect(() => {}, []);
 
     return (
         <Card sx={{ maxWidth: 345, marginTop: "30px", position: "relative" }}>
-            {user === "imsamimalik" && (
+            {username === process.env.REACT_APP_USERNAME && (
                 <CardHeader
                     action={
-                        <IconButton>
+                        <IconButton
+                            onClick={() =>
+                                deleteProduct().then(() => fetchProducts())
+                            }
+                        >
                             <DeleteIcon sx={{ color: "secondary.main" }} />
                         </IconButton>
                     }

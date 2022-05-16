@@ -110,7 +110,10 @@ const Cart = ({ fetchCount }) => {
                                 <DeleteIcon
                                     onClick={() =>
                                         deleteFromCart(item.productID).then(
-                                            fetchCart().then(() => fetchCount())
+                                            () =>
+                                                fetchCart().then(() =>
+                                                    fetchCount()
+                                                )
                                         )
                                     }
                                 />
@@ -127,7 +130,11 @@ const Cart = ({ fetchCount }) => {
             >
                 <Typography variant="h5" sx={{ textAlign: "right" }}>
                     Total: Rs.
-                    {cart.reduce((acc, item) => acc + item.unitPrice, 0)}
+                    {cart.reduce(
+                        (acc, item) =>
+                            acc + item.unitPrice * item.productQuantity,
+                        0
+                    )}
                 </Typography>
                 <Button
                     sx={{ float: "right", mt: 5 }}

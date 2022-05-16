@@ -75,8 +75,9 @@ Exec addProduct 'Tie', 'G2100', 1200, 45, 4, 'URL', @out18 output
 
 
 --Delete Product
-Exec deleteProduct 3
-Exec deleteProduct 2
+declare @out99 integer
+Exec deleteProduct 3,@out99 output
+Exec deleteProduct 2,@out99 output
 
 
 --Change quantity

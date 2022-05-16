@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -16,10 +16,11 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Wishlist", "Login"];
+const settings = ["Profile", "Wishlist"];
+let authState;
 
 const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -72,7 +73,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     },
 }));
 
-const Navbar = ({ user, countCart }) => {
+const Navbar = ({ username, setUsername, countCart }) => {
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -90,6 +91,25 @@ const Navbar = ({ user, countCart }) => {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+
+    let navigate = useNavigate();
+
+    const handleLogout = () => {
+        if (authState.toLowerCase() === "login") {
+            navigate("/login");
+        } else if (authState.toLowerCase() === "logout") {
+            setUsername("");
+            localStorage.removeItem("username");
+        }
+    };
+
+    useEffect(() => {
+        if (username !== null) {
+            authState = "Logout";
+        } else {
+            authState = "Login";
+        }
+    }, [username]);
 
     return (
         <AppBar position="static">
@@ -248,6 +268,16 @@ const Navbar = ({ user, countCart }) => {
                                     </MenuItem>
                                 </Link>
                             ))}
+
+                            <MenuItem onClick={handleCloseUserMenu}>
+                                <Typography
+                                    onClick={handleLogout}
+                                    textAlign="center"
+                                    color="primary.main"
+                                >
+                                    {authState}
+                                </Typography>
+                            </MenuItem>
                         </Menu>
                     </Box>
                 </Toolbar>

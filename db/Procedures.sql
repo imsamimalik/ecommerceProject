@@ -28,10 +28,20 @@ end
 go
 
 create procedure deleteProduct
-@pid int
+@pid int,
+@out integer output
 as
 begin
-	Delete from Product where ID=@pid
+	if exists(select * from Product where ID = @pid)
+	begin
+		Delete from Product where ID=@pid
+		set @out = 0
+	end
+	else
+	begin
+		set @out =1
+	end
+	
 end
 go
 
