@@ -24,7 +24,7 @@ router.delete("/", async (req, res) => {
             pool
                 .request()
                 .query(
-                    `delete from Wishlist where userID = '${uid}' and productID = '${productID}'`
+                    `delete from Cart where userID = '${uid}' and productID = '${productID}'`
                 )
         );
         console.table(result.output.out);

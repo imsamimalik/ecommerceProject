@@ -7,7 +7,11 @@ const Category = require("./routes/Category");
 const loginUser = require("./routes/Users/loginUser");
 const registerUser = require("./routes/Users/registerUser");
 const getUser = require("./routes/Users/getUser");
-const countCart = require("./routes/Cart/countCart");
+
+const addToCart = require("./routes/Cart/addToCart");
+const countItems = require("./routes/Cart/countItems");
+const getCart = require("./routes/Cart/getCart");
+const deleteFromCart = require("./routes/Cart/deleteFromCart");
 
 const addToWishlist = require("./routes/Wishlist/addToWishlist");
 const getWishlist = require("./routes/Wishlist/getWishlist");
@@ -30,11 +34,14 @@ app.use("/api/register", registerUser);
 app.use("/api/login", loginUser);
 app.use("/api/user", getUser);
 
-app.use("/api/countCart", countCart);
+app.use("/api/cart/countItems", countItems);
+app.use("/api/cart/add", addToCart);
+app.use("/api/cart", getCart);
+app.use("/api/cart/delete", deleteFromCart);
 
-app.use("/api/addToWishlist", addToWishlist);
+app.use("/api/wishlist/add", addToWishlist);
 app.use("/api/wishlist", getWishlist);
-app.use("/api/deleteFromWishlist", deleteFromWishlist);
+app.use("/api/wishlist/delete", deleteFromWishlist);
 
 app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);

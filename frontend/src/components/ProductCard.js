@@ -22,12 +22,13 @@ export default function ProductCard({
     catID,
     imgURL,
     user,
+    fetchCount,
 }) {
     const [open, setOpen] = useState(false);
     const [text, setText] = useState("added to wishlist");
 
     const addToWishlist = useCallback(async () => {
-        const result = await axios.post("/api/addToWishlist", {
+        const result = await axios.post("/api/wishlist/add", {
             productID,
             username: user,
         });
@@ -35,6 +36,24 @@ export default function ProductCard({
             setText("already in wishlist");
         } else {
             setText("added to wishlist");
+        }
+        setOpen(true);
+
+        setTimeout(() => {
+            setOpen(false);
+        }, 1000);
+    }, [productID, user]);
+
+    const addToCart = useCallback(async () => {
+        const result = await axios.post("/api/cart/add", {
+            productID,
+            username: user,
+            quantity: 1,
+        });
+        if (result.data.output === 1) {
+            setText("already in cart");
+        } else {
+            setText("added to cart");
         }
         setOpen(true);
 
@@ -93,7 +112,10 @@ export default function ProductCard({
                 </IconButton>
 
                 <IconButton aria-label="add-to-cart">
-                    <AddShoppingCartIcon sx={{ color: "primary.main" }} />
+                    <AddShoppingCartIcon
+                        sx={{ color: "primary.main" }}
+                        onClick={() => addToCart().then(() => fetchCount())}
+                    />
                 </IconButton>
             </CardActions>
 

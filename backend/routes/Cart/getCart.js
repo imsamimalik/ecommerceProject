@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-router.delete("/", async (req, res) => {
+router.post("/", async (req, res) => {
     const db = req.app.get("db");
 
-    const { username, productID } = req.body;
+    const { username } = req.body;
     let uid = -1;
 
     try {
@@ -23,13 +23,10 @@ router.delete("/", async (req, res) => {
         const result = await db.then((pool) =>
             pool
                 .request()
-                .query(
-                    `delete from Wishlist where userID = '${uid}' and productID = '${productID}'`
-                )
+                .query(`select * from cartView where userID = '${uid}'`)
         );
-        console.table(result.output.out);
-
-        res.json({ output: result.output.out });
+        console.table(result.recordset);
+        res.send(result.recordset);
     } catch (error) {
         console.error(error);
         res.status(500).json(error);

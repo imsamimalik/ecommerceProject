@@ -61,7 +61,7 @@ const SingleProduct = () => {
 
                 <Box sx={{ mt: 3 }}>
                     <QuantityPicker
-                        min={0}
+                        min={1}
                         max={product.productQuantity}
                         value={1}
                         smooth

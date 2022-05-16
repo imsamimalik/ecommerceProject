@@ -483,13 +483,13 @@ begin
 end
 go
 
-
+-- changed count to sum
 create procedure countCart
 @uid integer,
 @out integer output
 as
 begin
-	select @out = count(productQuantity)
+	select @out = sum(productQuantity)
 	from Cart
 	where userID = @uid
 end

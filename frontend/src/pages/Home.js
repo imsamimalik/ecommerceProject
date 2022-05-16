@@ -5,7 +5,7 @@ import Grid from "@mui/material/Grid";
 import ProductCard from "../components/ProductCard";
 import axios from "../lib/axios";
 
-const Home = () => {
+const Home = ({ fetchCount }) => {
     const [products, setProducts] = useState([]);
     const [user, setUser] = useState(null);
 
@@ -27,6 +27,7 @@ const Home = () => {
                     <Grid item key={product.productID}>
                         {/* <Link to={`/product/${product.productID}`}> */}
                         <ProductCard
+                            fetchCount={fetchCount}
                             user={user}
                             productID={product.productID}
                             name={product.productName}

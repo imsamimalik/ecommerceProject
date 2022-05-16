@@ -73,12 +73,8 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const Navbar = ({ user, countCart }) => {
-    const [anchorElNav, setAnchorElNav] = useState(
-        document.querySelector("body")
-    );
-    const [anchorElUser, setAnchorElUser] = useState(
-        document.querySelector("body")
-    );
+    const [anchorElNav, setAnchorElNav] = useState(null);
+    const [anchorElUser, setAnchorElUser] = useState(null);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -197,14 +193,16 @@ const Navbar = ({ user, countCart }) => {
                     </Box>
                     {/* CART ICON */}
                     <Box sx={{ flexGrow: 0, mx: { xs: "13px", md: "20px" } }}>
-                        <IconButton size="large">
-                            <StyledBadge
-                                badgeContent={countCart}
-                                color="success"
-                            >
-                                <ShoppingCartIcon sx={{ color: "#fff" }} />
-                            </StyledBadge>
-                        </IconButton>
+                        <Link to="/cart">
+                            <IconButton size="large">
+                                <StyledBadge
+                                    badgeContent={countCart}
+                                    color="success"
+                                >
+                                    <ShoppingCartIcon sx={{ color: "#fff" }} />
+                                </StyledBadge>
+                            </IconButton>
+                        </Link>
                     </Box>
                     {/* USER MENU */}
                     <Box sx={{ flexGrow: 0, mx: { xs: "13px" } }}>
