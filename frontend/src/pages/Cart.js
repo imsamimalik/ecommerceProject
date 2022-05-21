@@ -74,8 +74,9 @@ const Cart = ({ fetchCount }) => {
                         >
                             <Box>
                                 <img
-                                    src="https://mui.com/static/images/cards/paella.jpg"
-                                    height="100"
+                                    src={`/assets/${item.imgURL}`}
+                                    // height="100"
+                                    width="100"
                                     alt="product"
                                 />
                             </Box>

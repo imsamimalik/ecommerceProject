@@ -2,21 +2,20 @@ const express = require("express");
 const router = express.Router();
 const sql = require("mssql");
 
-router.delete("/", async (req, res) => {
+router.post("/", async (req, res) => {
     const db = req.app.get("db");
+    const { catID } = req.body;
 
-    const { username, productID } = req.body;
-
+    console.log("caa", catID);
     try {
         const result = await db.then((pool) =>
             pool
                 .request()
-                .input("pid", +productID)
-                .output("out", sql.Int, -1)
-                .execute("deleteProduct")
+                .input("catID", +catID)
+                .execute("searchCategroy")
         );
-        console.table(result.output.out);
-        res.json({ output: result.output.out });
+        console.table(result.recordset);
+        res.send(result.recordset);
     } catch (error) {
         console.error(error);
         res.status(500).json(error);

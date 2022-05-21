@@ -1,4 +1,10 @@
-import { useState, useEffect } from "react";
+import {
+    useState,
+    useEffect,
+    useContext,
+    useTransition,
+    useCallback,
+} from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -8,7 +14,7 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-// import Button from "@mui/material/Button";
+import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { styled, alpha } from "@mui/material/styles";
@@ -17,8 +23,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link, useNavigate } from "react-router-dom";
+import { SearchContext, UserContext, CategoryContext } from "../App";
+import axios from "../lib/axios";
+import { filterByCategory, fetchProducts } from "../pages/Home";
 
-const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Wishlist"];
 let authState;
 
@@ -56,9 +64,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         transition: theme.transitions.create("width"),
         width: "100%",
         [theme.breakpoints.up("sm")]: {
-            width: "12ch",
+            width: "20ch",
             "&:focus": {
-                width: "20ch",
+                width: "30ch",
             },
         },
     },
@@ -73,9 +81,15 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     },
 }));
 
-const Navbar = ({ username, setUsername, countCart }) => {
+const Navbar = ({ countCart }) => {
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
+    const [input, setInput] = useState("");
+    const [categories, setCategories] = useState([]);
+
+    const { setSearch } = useContext(SearchContext);
+    const { username, setUsername } = useContext(UserContext);
+    const { setCategory } = useContext(CategoryContext);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -84,8 +98,10 @@ const Navbar = ({ username, setUsername, countCart }) => {
         setAnchorElUser(event.currentTarget);
     };
 
-    const handleCloseNavMenu = () => {
+    const handleCloseNavMenu = async (id) => {
         setAnchorElNav(null);
+        setCategory(id);
+        await filterByCategory().then(() => filterByCategory());
     };
 
     const handleCloseUserMenu = () => {
@@ -103,6 +119,20 @@ const Navbar = ({ username, setUsername, countCart }) => {
         }
     };
 
+    const [, startTransition] = useTransition();
+
+    const handleSearch = (event) => {
+        setInput(event.target.value);
+        startTransition(() => {
+            setSearch(event.target.value);
+        });
+    };
+
+    const fetchCategories = useCallback(async () => {
+        const res = await axios.get("/api/categories");
+        setCategories(res.data);
+    }, []);
+
     useEffect(() => {
         if (username !== null) {
             authState = "Logout";
@@ -111,11 +141,15 @@ const Navbar = ({ username, setUsername, countCart }) => {
         }
     }, [username]);
 
+    useEffect(() => {
+        fetchCategories();
+    }, [fetchCategories]);
+
     return (
         <AppBar position="static">
             <Container maxWidth="1080px">
                 <Toolbar disableGutters>
-                    <Link to="/">
+                    <Link onClick={() => fetchProducts()} to="/">
                         <Typography
                             variant="h6"
                             noWrap
@@ -163,13 +197,13 @@ const Navbar = ({ username, setUsername, countCart }) => {
                                 display: { xs: "block", md: "none" },
                             }}
                         >
-                            {pages.map((page) => (
+                            {categories?.map((category) => (
                                 <MenuItem
-                                    key={page}
+                                    key={category.ID}
                                     onClick={handleCloseNavMenu}
                                 >
                                     <Typography textAlign="center">
-                                        {page}
+                                        {category.name}
                                     </Typography>
                                 </MenuItem>
                             ))}
@@ -184,7 +218,11 @@ const Navbar = ({ username, setUsername, countCart }) => {
                             <SearchIconWrapper>
                                 <SearchIcon />
                             </SearchIconWrapper>
-                            <StyledInputBase placeholder="Search…" />
+                            <StyledInputBase
+                                value={input}
+                                onChange={(event) => handleSearch(event)}
+                                placeholder="Search…"
+                            />
                         </Search>
                     </Box>
                     {/* Desktop menu */}
@@ -193,23 +231,36 @@ const Navbar = ({ username, setUsername, countCart }) => {
                             flexGrow: 1,
                             display: { xs: "none", md: "flex" },
                             mx: "50px",
+                            alignItems: "center",
                         }}
                     >
-                        {/* {pages.map((page) => (
-                            <Button
-                                key={page}
-                                // onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: "white", display: "block" }}
-                            >
-                                {page}
-                            </Button>
-                        ))} */}
                         <Search>
                             <SearchIconWrapper>
                                 <SearchIcon />
                             </SearchIconWrapper>
-                            <StyledInputBase placeholder="Search…" />
+                            <StyledInputBase
+                                value={input}
+                                onChange={(event) => handleSearch(event)}
+                                placeholder="Search..."
+                            />
                         </Search>
+                        <Box sx={{ display: "flex", mx: 5 }}>
+                            {categories?.map((category) => (
+                                <Button
+                                    key={category.ID}
+                                    onClick={() =>
+                                        handleCloseNavMenu(category.ID)
+                                    }
+                                    sx={{
+                                        mx: 2,
+                                        color: "white",
+                                        display: "block",
+                                    }}
+                                >
+                                    {category.name}
+                                </Button>
+                            ))}
+                        </Box>
                     </Box>
                     {/* CART ICON */}
                     <Box sx={{ flexGrow: 0, mx: { xs: "13px", md: "20px" } }}>

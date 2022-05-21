@@ -75,3 +75,12 @@ as
 	select C.ID as cartID, C.userID, C.productID, C.productQuantity, P.name as productName, P.unitPrice, P.quantityInStock, P.imgURL
 	from Cart C join uidName U on C.userID=U.ID join Product P on P.ID=C.productID
 go
+
+------------------------------NEW-----------------------------
+---------------------------   Review   --------------------------
+---------------------------------------------------------------
+create view reviewView
+as
+	select R.ID as reviewID, R.userID, U.username, productID, rating, description, convert(varchar, reviewDate, 100)	as reviewDate
+	from uidName U join Reviews R on U.ID = R.userID
+go

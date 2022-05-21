@@ -60,7 +60,7 @@ const Wishlist = () => {
                     >
                         <Box>
                             <img
-                                src="https://mui.com/static/images/cards/paella.jpg"
+                                src={`/assets/${item.imgURL}`}
                                 height="100"
                                 alt="product"
                             />

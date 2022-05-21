@@ -105,9 +105,13 @@ export default function ProductCard({
                 <CardActionArea>
                     <CardMedia
                         component="img"
-                        height="194"
-                        image="https://mui.com/static/images/cards/paella.jpg"
-                        alt="Paella dish"
+                        image={`/assets/${imgURL}`}
+                        alt={name}
+                        sx={{
+                            width: "290px",
+                            height: "200px",
+                            objectFit: "contain",
+                        }}
                     />
 
                     <CardContent
@@ -129,18 +133,18 @@ export default function ProductCard({
             <CardActions
                 sx={{ display: "flex", justifyContent: "space-between" }}
             >
-                <IconButton aria-label="add to favorites">
-                    <FavoriteIcon
-                        sx={{ color: "red" }}
-                        onClick={addToWishlist}
-                    />
+                <IconButton
+                    onClick={addToWishlist}
+                    aria-label="add to favorites"
+                >
+                    <FavoriteIcon sx={{ color: "red" }} />
                 </IconButton>
 
-                <IconButton aria-label="add-to-cart">
-                    <AddShoppingCartIcon
-                        sx={{ color: "primary.main" }}
-                        onClick={() => addToCart().then(() => fetchCount())}
-                    />
+                <IconButton
+                    onClick={() => addToCart().then(() => fetchCount())}
+                    aria-label="add-to-cart"
+                >
+                    <AddShoppingCartIcon sx={{ color: "primary.main" }} />
                 </IconButton>
             </CardActions>
 

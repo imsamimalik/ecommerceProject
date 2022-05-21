@@ -8,6 +8,8 @@ const deleteProduct = require("./routes/Products/deleteProduct");
 const addProduct = require("./routes/Products/addProduct");
 
 const Category = require("./routes/Category");
+const filterByCategory = require("./routes/Category/filterByCategory");
+
 const loginUser = require("./routes/Users/loginUser");
 const registerUser = require("./routes/Users/registerUser");
 const getUser = require("./routes/Users/getUser");
@@ -20,6 +22,9 @@ const deleteFromCart = require("./routes/Cart/deleteFromCart");
 const addToWishlist = require("./routes/Wishlist/addToWishlist");
 const getWishlist = require("./routes/Wishlist/getWishlist");
 const deleteFromWishlist = require("./routes/Wishlist/deleteFromWishlist");
+
+const addReview = require("./routes/Review/addReview");
+const getReviews = require("./routes/Review");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -34,7 +39,8 @@ app.use("/api/singleProduct", singleProduct);
 app.use("/api/product/delete", deleteProduct);
 app.use("/api/product/add", addProduct);
 
-app.use("/api/category", Category);
+app.use("/api/categories", Category);
+app.use("/api/category/", filterByCategory);
 
 app.use("/api/register", registerUser);
 app.use("/api/login", loginUser);
@@ -48,6 +54,9 @@ app.use("/api/cart/delete", deleteFromCart);
 app.use("/api/wishlist/add", addToWishlist);
 app.use("/api/wishlist", getWishlist);
 app.use("/api/wishlist/delete", deleteFromWishlist);
+
+app.use("/api/review/add", addReview);
+app.use("/api/review", getReviews);
 
 app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
