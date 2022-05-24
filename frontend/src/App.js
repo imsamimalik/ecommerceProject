@@ -10,6 +10,7 @@ import SingleProduct from "./pages/SingleProduct";
 import axios from "./lib/axios";
 import Wishlist from "./pages/Wishlist";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 
 const SearchContext = createContext();
 const UserContext = createContext();
@@ -79,7 +80,11 @@ function App() {
                                 <Route
                                     exact
                                     path="/wishlist"
-                                    element={<Wishlist />}
+                                    element={
+                                        <Wishlist
+                                            fetchCount={fetchCountOfCart}
+                                        />
+                                    }
                                 />
                                 <Route
                                     exact
@@ -94,6 +99,15 @@ function App() {
                                     path="/"
                                     element={
                                         <Home fetchCount={fetchCountOfCart} />
+                                    }
+                                />
+                                <Route
+                                    exact
+                                    path="/checkout"
+                                    element={
+                                        <Checkout
+                                            fetchCount={fetchCountOfCart}
+                                        />
                                     }
                                 />
                             </Routes>

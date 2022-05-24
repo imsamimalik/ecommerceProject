@@ -29,21 +29,19 @@ as
 	from Product P join Category C on P.catID = C.ID
 go
 
-
 create view productReviewsView
 as 
-	select R.ID as reviewID, R.userID, U.username, R.productID, R.rating, R.description as reviewText, R.reviewDate
+	select R.ID as reviewID, R.userID, U.username, R.productID, R.rating, R.description as reviewText,convert(varchar, reviewDate, 100)	as reviewDate
 	from Reviews R join Product P on R.productID = P.ID join uidName U on R.userID = U.ID
 go
 
 ---------------------------------------------------------------
 ---------------------------   USER   --------------------------
 ---------------------------------------------------------------
-
 create view userReviewsView
 as
-	select R.ID as reviewID, R.userID,U.username, R.productID, R.rating, R.description as reviewText, R.reviewDate
-	from Reviews R join uidName U on R.userID = U.ID
+	select R.ID as reviewID, R.userID,U.username, R.productID, R.rating, R.description as reviewText, convert(varchar, reviewDate, 100)	as reviewDate, imgURL
+	from Reviews R join uidName U on R.userID = U.ID join Product P on R.productID = P.ID
 go
 
 
@@ -74,13 +72,4 @@ create view cartView
 as
 	select C.ID as cartID, C.userID, C.productID, C.productQuantity, P.name as productName, P.unitPrice, P.quantityInStock, P.imgURL
 	from Cart C join uidName U on C.userID=U.ID join Product P on P.ID=C.productID
-go
-
-------------------------------NEW-----------------------------
----------------------------   Review   --------------------------
----------------------------------------------------------------
-create view reviewView
-as
-	select R.ID as reviewID, R.userID, U.username, productID, rating, description, convert(varchar, reviewDate, 100)	as reviewDate
-	from uidName U join Reviews R on U.ID = R.userID
 go

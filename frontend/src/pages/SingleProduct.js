@@ -114,9 +114,9 @@ const SingleProduct = ({ fetchCount }) => {
                     <Typography sx={{ mt: 3 }} variant="h5">
                         Rs. {product.unitPrice}
                     </Typography>
-                    {/* <Typography sx={{ mt: 3 }} variant="h5">
-                    In Stock: {product.productQuantity}
-                </Typography> */}
+                    <Typography sx={{ mt: 3 }} variant="h5">
+                        In Stock: {product.productQuantity}
+                    </Typography>
 
                     <Box sx={{ mt: 3 }}>
                         <QuantityPicker
@@ -170,7 +170,13 @@ const SingleProduct = ({ fetchCount }) => {
             >
                 <Typography variant="h4">Reviews</Typography>
                 {reviewsList.map((rev) => (
-                    <Comment key={rev.reviewID} rev={rev} />
+                    <Comment
+                        key={rev.reviewID}
+                        username={rev.username}
+                        reviewText={rev.reviewText}
+                        rating={rev.rating}
+                        reviewDate={rev.reviewDate}
+                    />
                 ))}
                 <CommentInput
                     review={review}
@@ -178,6 +184,7 @@ const SingleProduct = ({ fetchCount }) => {
                     rating={rating}
                     setRating={setRating}
                     submitReview={submitReview}
+                    fetchReviews={fetchReviews}
                 />
             </Container>
         </>

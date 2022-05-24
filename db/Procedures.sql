@@ -511,7 +511,9 @@ go
 ---------------------------------------------------------------
 
 create procedure placeOrder
-@uid integer
+@uid integer,
+@oid integer output,
+@out integer output
 as 
 begin
 	declare @blacklist integer
@@ -520,30 +522,31 @@ begin
 	if(@blacklist = 1)
 	begin
 		print 'user is blacklisted'
+		set @out = 1
 	end
 	else
 	begin
 	insert into [Orders] (userID) values (@uid)
+	set @oid = SCOPE_IDENTITY()
+	set @out = 0
 	end
 end
 GO
-
 
 create procedure addProductsToOrder
 @oid integer,
 @pid integer,
 @quantity integer,
-@couponName varchar(50),
+@discount float,
 @out integer output
 as
 begin
 		if (exists(select ID from Product where ID = @pid))
 		begin
-			declare @discount float
+			
 			declare @originalPrice float
 			declare @retailPrice float
 
-			set @discount = isnull((Select discount from Coupon where name = @couponName),0)
 			set @originalPrice = (Select unitPrice from [Product] where id = @pid)
 			set @retailPrice = @originalPrice -(@originalPrice * @discount / 100)
 			
@@ -610,6 +613,7 @@ begin
 				update [Orders]
 				set paymentMethod = @paymentMethod, orderPlacementDate = @orderPlacementDate
 				where ID = @oid
+				delete from Cart where userID = @uid
 
 			end	
 		end
@@ -619,6 +623,8 @@ begin
 			update [Orders]
 			set paymentMethod = @paymentMethod, orderPlacementDate = @orderPlacementDate
 			where ID = @oid
+			delete from Cart where userID = @uid
+			set @out = 0
 		end
 end
 go

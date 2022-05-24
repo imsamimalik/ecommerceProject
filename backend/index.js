@@ -13,6 +13,7 @@ const filterByCategory = require("./routes/Category/filterByCategory");
 const loginUser = require("./routes/Users/loginUser");
 const registerUser = require("./routes/Users/registerUser");
 const getUser = require("./routes/Users/getUser");
+const getReviewsOfUser = require("./routes/Users/getReviews");
 
 const addToCart = require("./routes/Cart/addToCart");
 const countItems = require("./routes/Cart/countItems");
@@ -25,6 +26,11 @@ const deleteFromWishlist = require("./routes/Wishlist/deleteFromWishlist");
 
 const addReview = require("./routes/Review/addReview");
 const getReviews = require("./routes/Review");
+
+const getDiscount = require("./routes/Coupon/getDiscount");
+
+const placeOrder = require("./routes/Order/placeOrder");
+const getOrders = require("./routes/Order/getOrders");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -45,6 +51,7 @@ app.use("/api/category/", filterByCategory);
 app.use("/api/register", registerUser);
 app.use("/api/login", loginUser);
 app.use("/api/user", getUser);
+app.use("/api/user/reviews", getReviewsOfUser);
 
 app.use("/api/cart/countItems", countItems);
 app.use("/api/cart/add", addToCart);
@@ -57,6 +64,11 @@ app.use("/api/wishlist/delete", deleteFromWishlist);
 
 app.use("/api/review/add", addReview);
 app.use("/api/review", getReviews);
+
+app.use("/api/coupon/getDiscount", getDiscount);
+
+app.use("/api/order/placeOrder", placeOrder);
+app.use("/api/order/getOrders", getOrders);
 
 app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);

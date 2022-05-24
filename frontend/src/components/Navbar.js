@@ -101,6 +101,7 @@ const Navbar = ({ countCart }) => {
     const handleCloseNavMenu = async (id) => {
         setAnchorElNav(null);
         setCategory(id);
+        navigate("/");
         await filterByCategory().then(() => filterByCategory());
     };
 

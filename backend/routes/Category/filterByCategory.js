@@ -6,7 +6,6 @@ router.post("/", async (req, res) => {
     const db = req.app.get("db");
     const { catID } = req.body;
 
-    console.log("caa", catID);
     try {
         const result = await db.then((pool) =>
             pool

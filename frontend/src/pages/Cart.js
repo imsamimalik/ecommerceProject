@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import Snackbar from "@mui/material/Snackbar";
 import Badge from "@mui/material/Badge";
 import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
 
 import axios from "../lib/axios";
 
@@ -137,13 +138,15 @@ const Cart = ({ fetchCount }) => {
                         0
                     )}
                 </Typography>
-                <Button
-                    sx={{ float: "right", mt: 5 }}
-                    size="large"
-                    variant="contained"
-                >
-                    Add to cart
-                </Button>
+                <Link to="/checkout">
+                    <Button
+                        sx={{ float: "right", mt: 5 }}
+                        size="large"
+                        variant="contained"
+                    >
+                        Place Order
+                    </Button>
+                </Link>
             </Box>
 
             <Snackbar open={open} message="deleted from cart" />

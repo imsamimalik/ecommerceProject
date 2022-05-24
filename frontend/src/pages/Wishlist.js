@@ -10,9 +10,10 @@ import Snackbar from "@mui/material/Snackbar";
 
 import axios from "../lib/axios";
 
-const Wishlist = () => {
+const Wishlist = ({ fetchCount }) => {
     const [wishlist, setWishlist] = useState([]);
     const [open, setOpen] = useState(false);
+    const [text, setText] = useState("added to wishlist");
 
     let username = localStorage.getItem("username");
 
@@ -42,6 +43,27 @@ const Wishlist = () => {
             setOpen(false);
         }, 1000);
     };
+
+    const addToCart = useCallback(
+        async (productID) => {
+            const result = await axios.post("/api/cart/add", {
+                productID,
+                username,
+                quantity: 1,
+            });
+            if (result.data.output !== 0) {
+                setText("already in cart");
+            } else {
+                setText("added to cart");
+            }
+            setOpen(true);
+
+            setTimeout(() => {
+                setOpen(false);
+            }, 1000);
+        },
+        [username]
+    );
 
     return (
         <Container sx={{ mt: 10 }}>
@@ -81,24 +103,31 @@ const Wishlist = () => {
                                 marginLeft: "auto",
                             }}
                         >
-                            <IconButton>
+                            <IconButton
+                                onClick={() =>
+                                    addToCart(item.productID)
+                                        .then(() => fetchWishlist())
+                                        .then(() => fetchCount())
+                                }
+                            >
                                 <AddShoppingCartIcon />
                             </IconButton>
-                            <IconButton color="secondary">
-                                <DeleteIcon
-                                    onClick={() => {
-                                        deletefromWishlist(item.productID).then(
-                                            fetchWishlist
-                                        );
-                                    }}
-                                />
+                            <IconButton
+                                onClick={() => {
+                                    deletefromWishlist(item.productID).then(
+                                        fetchWishlist
+                                    );
+                                }}
+                                color="secondary"
+                            >
+                                <DeleteIcon />
                             </IconButton>
                         </Box>
                     </Paper>
                 ))
             )}
 
-            <Snackbar open={open} message="deleted from wishlist" />
+            <Snackbar open={open} message={text} />
         </Container>
     );
 };

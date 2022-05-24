@@ -12,6 +12,7 @@ const CommentInput = ({
     rating,
     setRating,
     submitReview,
+    fetchReviews,
 }) => {
     return (
         <Box
@@ -30,9 +31,13 @@ const CommentInput = ({
                     }}
                 />
             </Box>
-            <form onSubmit={(event) => submitReview(event)}>
+            <form
+                onSubmit={(event) =>
+                    submitReview(event).then(() => fetchReviews())
+                }
+            >
                 <TextField
-                    multiline
+                    // multiline
                     minRows={2}
                     fullWidth
                     value={review}
