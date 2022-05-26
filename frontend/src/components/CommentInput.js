@@ -5,6 +5,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import SendIcon from "@mui/icons-material/Send";
 import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 
 const CommentInput = ({
     review,
@@ -46,7 +47,15 @@ const CommentInput = ({
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
-                                <SendIcon />
+                                <IconButton
+                                    onClick={(event) =>
+                                        submitReview(event).then(() =>
+                                            fetchReviews()
+                                        )
+                                    }
+                                >
+                                    <SendIcon />
+                                </IconButton>
                             </InputAdornment>
                         ),
                     }}

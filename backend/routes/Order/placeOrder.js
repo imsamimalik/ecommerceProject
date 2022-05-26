@@ -88,7 +88,7 @@ router.post("/", async (req, res) => {
         .then(() => addProductsToOrder())
         .then(() => finalizeOrder())
         .finally(() => {
-            console.log("FINALL");
+            console.log("order placed");
             res.send({ oid });
         });
 });

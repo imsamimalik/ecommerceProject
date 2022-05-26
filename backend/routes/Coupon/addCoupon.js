@@ -4,23 +4,25 @@ const sql = require("mssql");
 
 router.post("/", async (req, res) => {
     const db = req.app.get("db");
-    const { username, password } = req.body;
+
+    const { couponName, couponDiscount, couponCode } = req.body;
 
     try {
         const result = await db.then((pool) =>
             pool
                 .request()
-                .input("username", username)
-                .input("password", password)
+                .input("name", couponName)
+                .input("discount", +couponDiscount)
+                .input("code", couponCode)
                 .output("out", sql.Int, -1)
-                .execute("loginUser")
+                .execute("addCoupon")
         );
-        console.table({ output: result.output.out });
 
-        res.json({ output: result.output.out });
+        console.log(result.output.out);
+        res.status(200).send({ output: result.output.out });
     } catch (error) {
         console.error(error);
-        res.status(500).json(error);
+        res.status(500).send(error);
     }
 });
 

@@ -20,15 +20,16 @@ const Cart = ({ fetchCount }) => {
     let username = localStorage.getItem("username");
 
     const fetchCart = useCallback(async () => {
-        await axios.post("/api/cart", { username }).then((res) => {
-            console.log(res.data);
-            setCart(res.data);
-        });
+        username &&
+            (await axios.post("/api/cart", { username }).then((res) => {
+                console.log(res.data);
+                setCart(res.data);
+            }));
     }, [username]);
 
     useEffect(() => {
-        fetchCart();
-    }, [fetchCart]);
+        username && fetchCart();
+    }, [username, fetchCart]);
 
     const deleteFromCart = async (productID) => {
         const result = await axios.delete("/api/cart/delete", {
@@ -108,17 +109,15 @@ const Cart = ({ fetchCount }) => {
                                     }
                                 />
                             </IconButton>
-                            <IconButton color="secondary">
-                                <DeleteIcon
-                                    onClick={() =>
-                                        deleteFromCart(item.productID).then(
-                                            () =>
-                                                fetchCart().then(() =>
-                                                    fetchCount()
-                                                )
-                                        )
-                                    }
-                                />
+                            <IconButton
+                                onClick={() =>
+                                    deleteFromCart(item.productID).then(() =>
+                                        fetchCart().then(() => fetchCount())
+                                    )
+                                }
+                                color="secondary"
+                            >
+                                <DeleteIcon />
                             </IconButton>
                         </Box>
                     </Paper>

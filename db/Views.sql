@@ -48,7 +48,7 @@ go
 create view userOrdersView
 as
 	select D.orderID, D.ID as orderDetailsID, O.userID, U.username, D.productID, D.originalPrice, D.quantity as productQuantity, D.discount,
-	D.retailPrice, O.paymentMethod, O.orderPlacementDate, O.deliveryStatus, O.dispatchDate, O.receiveDate, O.paymentStatus
+	D.retailPrice, O.paymentMethod, convert(varchar, O.orderPlacementDate, 100) as orderPlacementDate, O.deliveryStatus, convert(varchar, O.dispatchDate, 100) as dispatchDate, convert(varchar, O.receiveDate, 100) as receiveDate, O.paymentStatus
 	from Orders O join Users U on O.userID = U.ID join OrderDetails D on O.ID = D.orderID
 go
 

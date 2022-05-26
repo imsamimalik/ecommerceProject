@@ -380,6 +380,7 @@ go
 
 
 create procedure deleteReview
+@rid integer,
 @pid integer,
 @uid integer,
 @out integer output
@@ -393,7 +394,7 @@ begin
 	)
 	begin
 		delete from Reviews
-		where userID = @uid and productID = @pid
+		where userID = @uid and productID = @pid and ID=@rid
 		print 'review deleted'
 		set @out = 0
 	end
@@ -406,6 +407,30 @@ begin
 end
 go
 
+
+create procedure isReviewAllowed
+@pid int,
+@uid int,
+@out int output
+as
+begin
+
+	if exists(
+		select OD.ID
+		from OrderDetails OD join Orders O on OD.orderID = O.ID
+		where productID = @pid and userID=@uid and O.deliveryStatus=1
+		)
+	begin
+		set @out = 0
+	end
+	else
+	begin
+		set @out = 1
+	end
+
+
+end
+go
 
 ---------------------------------------------------------------
 ---------------------------   CART   --------------------------
@@ -600,7 +625,7 @@ begin
 			else
 			begin
 				update [Users]
-				set walletBalance = walletBalance - @totalAmount
+				set walletBalance = @walletBalance - @totalAmount
 				where ID = @uid
 
 				update Orders
@@ -631,21 +656,21 @@ go
 
 --dispatchdate
 create procedure updateDispatchDate 
-@oid int, @dispatchDate datetime
+@oid int
 as
 begin
 	update [Orders]
-	set dispatchDate = @dispatchDate
+	set dispatchDate = SYSDATETIME()
 	where ID = @oid
 end
 go
 
 create procedure updateReceiveDate 
-@oid int, @receiveDate datetime
+@oid int
 as
 begin
 	update [Orders]
-	set receiveDate = @receiveDate
+	set receiveDate =SYSDATETIME()
 	where ID = @oid
 end
 go

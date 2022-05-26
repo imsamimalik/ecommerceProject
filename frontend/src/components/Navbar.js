@@ -27,8 +27,8 @@ import { SearchContext, UserContext, CategoryContext } from "../App";
 import axios from "../lib/axios";
 import { filterByCategory, fetchProducts } from "../pages/Home";
 
-const settings = ["Profile", "Wishlist"];
-let authState;
+const SETTINGS = ["Profile", "Wishlist"];
+let authState, fetchCategories;
 
 const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -129,7 +129,7 @@ const Navbar = ({ countCart }) => {
         });
     };
 
-    const fetchCategories = useCallback(async () => {
+    fetchCategories = useCallback(async () => {
         const res = await axios.get("/api/categories");
         setCategories(res.data);
     }, []);
@@ -144,13 +144,20 @@ const Navbar = ({ countCart }) => {
 
     useEffect(() => {
         fetchCategories();
-    }, [fetchCategories]);
+    }, []);
 
     return (
         <AppBar position="static">
             <Container maxWidth="1080px">
                 <Toolbar disableGutters>
-                    <Link onClick={() => fetchProducts()} to="/">
+                    <Link
+                        onClick={() => {
+                            fetchProducts();
+                            setInput("");
+                            setSearch("");
+                        }}
+                        to="/"
+                    >
                         <Typography
                             variant="h6"
                             noWrap
@@ -305,7 +312,7 @@ const Navbar = ({ countCart }) => {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            {settings.map((setting) => (
+                            {SETTINGS.map((setting) => (
                                 <Link
                                     to={`${setting.toLowerCase()}`}
                                     key={setting}
@@ -338,3 +345,4 @@ const Navbar = ({ countCart }) => {
     );
 };
 export default Navbar;
+export { fetchCategories };

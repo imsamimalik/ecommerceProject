@@ -28,14 +28,14 @@ function App() {
     }, [username]);
 
     const fetchCountOfCart = useCallback(async () => {
-        if (username !== null) {
+        username &&
             axios
                 .post("/api/cart/countItems", { username })
                 .then((res) => {
                     setTotalCart(res.data.output);
                 })
                 .catch((err) => console.log(err));
-        }
+        
     }, [username]);
 
     useEffect(() => {

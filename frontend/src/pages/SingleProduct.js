@@ -31,6 +31,7 @@ const SingleProduct = ({ fetchCount }) => {
     const [review, setReview] = useState("");
     const [rating, setRating] = useState(0);
     const [reviewsList, setReviewsList] = useState([]);
+    const [reviewAllowed, setReviewAllowed] = useState(false);
 
     let username = localStorage.getItem("username");
 
@@ -80,6 +81,22 @@ const SingleProduct = ({ fetchCount }) => {
         setReviewsList(result.data);
     }, [id]);
 
+    const isReviewAllowed = useCallback(async () => {
+        try {
+            const result = await axios.post(`/api/review/isAllowed`, {
+                username,
+                productID: id,
+            });
+            if (result.data.output === 0) {
+                setReviewAllowed(true);
+            } else {
+                setReviewAllowed(false);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }, [id, username]);
+
     useEffect(() => {
         fetchProduct();
     }, [fetchProduct]);
@@ -87,6 +104,10 @@ const SingleProduct = ({ fetchCount }) => {
     useEffect(() => {
         fetchReviews();
     }, [fetchReviews]);
+
+    useEffect(() => {
+        isReviewAllowed();
+    }, [isReviewAllowed]);
 
     return (
         <>
@@ -96,6 +117,7 @@ const SingleProduct = ({ fetchCount }) => {
                         maxHeight: "550px;",
                         aspectRatio: "7/6",
                         display: "flex",
+                        mr: 2,
                     }}
                 >
                     <img
@@ -130,13 +152,13 @@ const SingleProduct = ({ fetchCount }) => {
                     <Box
                         sx={{
                             mt: 3,
-                            //  display: "flex", justifyContent: "center"
                         }}
                     >
                         <Button
                             fullWidth
                             size="large"
                             variant="contained"
+                            disabled={product.productQuantity === 0}
                             onClick={() => addToCart().then(() => fetchCount())}
                         >
                             Add to cart
@@ -176,16 +198,27 @@ const SingleProduct = ({ fetchCount }) => {
                         reviewText={rev.reviewText}
                         rating={rev.rating}
                         reviewDate={rev.reviewDate}
+                        pid={id}
+                        reviewID={rev.reviewID}
+                        fetchReviews={fetchReviews}
                     />
                 ))}
-                <CommentInput
-                    review={review}
-                    setReview={setReview}
-                    rating={rating}
-                    setRating={setRating}
-                    submitReview={submitReview}
-                    fetchReviews={fetchReviews}
-                />
+                {reviewAllowed ? (
+                    <CommentInput
+                        review={review}
+                        setReview={setReview}
+                        rating={rating}
+                        setRating={setRating}
+                        submitReview={submitReview}
+                        fetchReviews={fetchReviews}
+                    />
+                ) : (
+                    <Box>
+                        <Typography variant="h5">
+                            Order this Product to leave a review.
+                        </Typography>
+                    </Box>
+                )}
             </Container>
         </>
     );

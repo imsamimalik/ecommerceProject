@@ -19,12 +19,10 @@ import { useNavigate } from "react-router-dom";
 const theme = createTheme();
 export default function SignIn({ setUsername }) {
     const [error, setError] = useState(false);
-    const [loading, setLoading] = useState(false);
 
     let navigate = useNavigate();
 
     const handleSubmit = async (event) => {
-        setLoading(true);
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const username = data.get("username");
@@ -48,7 +46,6 @@ export default function SignIn({ setUsername }) {
         } catch (error) {
             console.log(error);
         }
-        setTimeout(() => setLoading(false), 200);
     };
     return (
         <ThemeProvider theme={theme}>
@@ -110,7 +107,6 @@ export default function SignIn({ setUsername }) {
                         <Button
                             type="submit"
                             fullWidth
-                            disabled={loading}
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >

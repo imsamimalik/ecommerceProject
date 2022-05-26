@@ -29,7 +29,7 @@ const Home = ({ fetchCount }) => {
 
     useEffect(() => {
         fetchProducts();
-    }, []);
+    }, [search]);
 
     useEffect(() => {
         setUsername(localStorage.getItem("username"));
