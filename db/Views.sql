@@ -53,6 +53,12 @@ as
 go
 
 
+create view blackListView
+as
+	select B.userID,B.description,U.username
+	from uidName U join BlackList B on U.ID = B.userID
+go
+
 ---------------------------------------------------------------
 ---------------------------   Wishlist   ----------------------
 ---------------------------------------------------------------

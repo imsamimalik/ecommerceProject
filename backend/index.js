@@ -6,6 +6,7 @@ const Products = require("./routes/Products");
 const singleProduct = require("./routes/Products/singleProduct");
 const deleteProduct = require("./routes/Products/deleteProduct");
 const addProduct = require("./routes/Products/addProduct");
+const editProduct = require("./routes/Products/editProduct");
 
 const Category = require("./routes/Category");
 const filterByCategory = require("./routes/Category/filterByCategory");
@@ -39,6 +40,10 @@ const placeOrder = require("./routes/Order/placeOrder");
 const getOrders = require("./routes/Order/getOrders");
 const deliverOrder = require("./routes/Order/deliverOrder");
 
+const blackList = require("./routes/Blacklist");
+const addToBlacklist = require("./routes/Blacklist/addToBlacklist");
+const removeFromBlackList = require("./routes/Blacklist/removeFromBlackList");
+
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -51,6 +56,7 @@ app.use("/api", Products);
 app.use("/api/singleProduct", singleProduct);
 app.use("/api/product/delete", deleteProduct);
 app.use("/api/product/add", addProduct);
+app.use("/api/product/edit", editProduct);
 
 app.use("/api/categories", Category);
 app.use("/api/category/", filterByCategory);
@@ -83,6 +89,10 @@ app.use("/api/coupon/delete", deleteCoupon);
 app.use("/api/order/placeOrder", placeOrder);
 app.use("/api/order/getOrders", getOrders);
 app.use("/api/order/deliverOrder", deliverOrder);
+
+app.use("/api/blacklist", blackList);
+app.use("/api/blacklist/add", addToBlacklist);
+app.use("/api/blacklist/remove", removeFromBlackList);
 
 app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);

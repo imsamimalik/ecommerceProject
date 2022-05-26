@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
@@ -18,7 +18,7 @@ const style = {
 };
 
 const FAB = ({ fetchProducts }) => {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     return (
@@ -27,12 +27,7 @@ const FAB = ({ fetchProducts }) => {
                 <AddIcon />
             </Fab>
 
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
+            <Modal open={open} onClose={handleClose}>
                 <Box sx={style}>
                     <AddProduct
                         handleClose={handleClose}

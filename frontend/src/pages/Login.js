@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -10,26 +10,27 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import axios from "../lib/axios";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../App";
 
-const theme = createTheme();
-export default function SignIn({ setUsername }) {
+export default function Login() {
     const [error, setError] = useState(false);
 
     let navigate = useNavigate();
+    const { setUsername } = useContext(UserContext);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const username = data.get("username");
+        const _username = data.get("username");
         const password = data.get("password");
+
         try {
             const response = await axios.post("/api/login", {
-                username,
+                username: _username,
                 password,
             });
 
@@ -40,96 +41,92 @@ export default function SignIn({ setUsername }) {
                 }, 1000);
                 return;
             }
-            localStorage.setItem("username", username);
-            setUsername(username);
+            localStorage.setItem("username", _username);
+            setUsername(_username);
             navigate("/");
         } catch (error) {
             console.log(error);
         }
     };
     return (
-        <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
-                <Box
+        <Container component="main" maxWidth="xs">
+            <Box
+                sx={{
+                    marginTop: 15,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                <Avatar
                     sx={{
-                        marginTop: 15,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        m: 1,
+                        bgcolor: "primary.main",
+                        width: 60,
+                        height: 60,
                     }}
                 >
-                    <Avatar
-                        sx={{
-                            m: 1,
-                            bgcolor: "primary.main",
-                            width: 60,
-                            height: 60,
-                        }}
+                    <LockOutlinedIcon fontSize="large" />
+                </Avatar>
+                <Typography sx={{ mt: 3 }} component="h1" variant="h4">
+                    Log in
+                </Typography>
+                <Box
+                    component="form"
+                    onSubmit={handleSubmit}
+                    noValidate
+                    sx={{ mt: 1 }}
+                >
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="username"
+                        label="Username"
+                        name="username"
+                        autoComplete="username"
+                        autoFocus
+                    />
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        autoComplete="password"
+                    />
+                    <FormControlLabel
+                        control={<Checkbox value="remember" color="primary" />}
+                        label="Remember me"
+                    />
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
                     >
-                        <LockOutlinedIcon fontSize="large" />
-                    </Avatar>
-                    <Typography sx={{ mt: 3 }} component="h1" variant="h4">
-                        Log in
-                    </Typography>
-                    <Box
-                        component="form"
-                        onSubmit={handleSubmit}
-                        noValidate
-                        sx={{ mt: 1 }}
-                    >
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="username"
-                            label="Username"
-                            name="username"
-                            autoComplete="username"
-                            autoFocus
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="password"
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox value="remember" color="primary" />
-                            }
-                            label="Remember me"
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Log In
-                        </Button>
-                        <Grid container>
-                            <Grid item>
-                                <Link to="/register" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
-                            </Grid>
+                        Log In
+                    </Button>
+                    <Grid container>
+                        <Grid item>
+                            <Link to="/register" variant="body2">
+                                {"Don't have an account? Sign Up"}
+                            </Link>
                         </Grid>
-                    </Box>
+                    </Grid>
                 </Box>
+            </Box>
 
-                <Stack sx={{ mt: 2, width: "100%" }} spacing={2}>
-                    {error && (
-                        <Alert severity="error">
-                            Invalid Credentials. Please try again.
-                        </Alert>
-                    )}
-                </Stack>
-            </Container>
-        </ThemeProvider>
+            <Stack sx={{ mt: 2, width: "100%" }} spacing={2}>
+                {error && (
+                    <Alert severity="error">
+                        Invalid Credentials. Please try again.
+                    </Alert>
+                )}
+            </Stack>
+        </Container>
     );
 }

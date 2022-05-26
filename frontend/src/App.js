@@ -15,12 +15,14 @@ import Checkout from "./pages/Checkout";
 const SearchContext = createContext();
 const UserContext = createContext();
 const CategoryContext = createContext();
+const AuthContext = createContext();
 
 function App() {
     const [username, setUsername] = useState(null);
     const [totalCart, setTotalCart] = useState(0);
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("");
+    const [authState, setAuthState] = useState("Login");
 
     useEffect(() => {
         setUsername(localStorage.getItem("username"));
@@ -35,7 +37,6 @@ function App() {
                     setTotalCart(res.data.output);
                 })
                 .catch((err) => console.log(err));
-        
     }, [username]);
 
     useEffect(() => {
@@ -46,78 +47,84 @@ function App() {
         <div className="app">
             <CssBaseline />
             <UserContext.Provider value={{ username, setUsername }}>
-                <SearchContext.Provider value={{ search, setSearch }}>
-                    <CategoryContext.Provider value={{ category, setCategory }}>
-                        <Router>
-                            <Navbar countCart={totalCart} />
-                            <Routes>
-                                <Route
-                                    exact
-                                    path="/login"
-                                    element={
-                                        <Login setUsername={setUsername} />
-                                    }
-                                />
-                                <Route
-                                    exact
-                                    path="/register"
-                                    element={<Register />}
-                                />
-                                <Route
-                                    exact
-                                    path="/product/:id"
-                                    element={
-                                        <SingleProduct
-                                            fetchCount={fetchCountOfCart}
-                                        />
-                                    }
-                                />
-                                <Route
-                                    exact
-                                    path="/profile"
-                                    element={<Profile />}
-                                />
-                                <Route
-                                    exact
-                                    path="/wishlist"
-                                    element={
-                                        <Wishlist
-                                            fetchCount={fetchCountOfCart}
-                                        />
-                                    }
-                                />
-                                <Route
-                                    exact
-                                    path="/cart"
-                                    element={
-                                        <Cart fetchCount={fetchCountOfCart} />
-                                    }
-                                />
-                                <Route
-                                    exact
-                                    index
-                                    path="/"
-                                    element={
-                                        <Home fetchCount={fetchCountOfCart} />
-                                    }
-                                />
-                                <Route
-                                    exact
-                                    path="/checkout"
-                                    element={
-                                        <Checkout
-                                            fetchCount={fetchCountOfCart}
-                                        />
-                                    }
-                                />
-                            </Routes>
-                        </Router>
-                    </CategoryContext.Provider>
-                </SearchContext.Provider>
+                <AuthContext.Provider value={{ authState, setAuthState }}>
+                    <SearchContext.Provider value={{ search, setSearch }}>
+                        <CategoryContext.Provider
+                            value={{ category, setCategory }}
+                        >
+                            <Router>
+                                <Navbar countCart={totalCart} />
+                                <Routes>
+                                    <Route
+                                        exact
+                                        path="/login"
+                                        element={<Login />}
+                                    />
+                                    <Route
+                                        exact
+                                        path="/register"
+                                        element={<Register />}
+                                    />
+                                    <Route
+                                        exact
+                                        path="/product/:id"
+                                        element={
+                                            <SingleProduct
+                                                fetchCount={fetchCountOfCart}
+                                            />
+                                        }
+                                    />
+                                    <Route
+                                        exact
+                                        path="/profile"
+                                        element={<Profile />}
+                                    />
+                                    <Route
+                                        exact
+                                        path="/wishlist"
+                                        element={
+                                            <Wishlist
+                                                fetchCount={fetchCountOfCart}
+                                            />
+                                        }
+                                    />
+                                    <Route
+                                        exact
+                                        path="/cart"
+                                        element={
+                                            <Cart
+                                                fetchCount={fetchCountOfCart}
+                                            />
+                                        }
+                                    />
+                                    <Route
+                                        exact
+                                        index
+                                        path="/"
+                                        element={
+                                            <Home
+                                                fetchCount={fetchCountOfCart}
+                                            />
+                                        }
+                                    />
+                                    <Route
+                                        exact
+                                        path="/checkout"
+                                        element={
+                                            <Checkout
+                                                fetchCount={fetchCountOfCart}
+                                            />
+                                        }
+                                    />
+                                </Routes>
+                            </Router>
+                        </CategoryContext.Provider>
+                    </SearchContext.Provider>
+                </AuthContext.Provider>
             </UserContext.Provider>
         </div>
     );
 }
 
 export default App;
-export { SearchContext, UserContext, CategoryContext };
+export { SearchContext, UserContext, CategoryContext, AuthContext };

@@ -1,4 +1,4 @@
-import { useCallback, memo } from "react";
+import { useCallback, memo, useContext } from "react";
 import Box from "@mui/material/Box";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Paper from "@mui/material/Paper";
@@ -7,8 +7,7 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "../lib/axios";
-
-let uname = localStorage.getItem("username");
+import { UserContext } from "../App";
 
 const Comment = ({
     username,
@@ -24,9 +23,11 @@ const Comment = ({
         await axios.post("/api/review/delete", { username, reviewID, pid });
     };
 
+    const { username: uname } = useContext(UserContext);
+
     const isSameUser = useCallback(() => {
         return uname === username;
-    }, [username]);
+    }, [username, uname]);
 
     return (
         <Paper

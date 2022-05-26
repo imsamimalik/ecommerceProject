@@ -4,24 +4,20 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import axios from "../lib/axios";
 
-
-export default function AddProduct({ handleClose, fetchProducts }) {
-    const [error, setError] = useState(false);
-    const [category, setCategory] = useState("");
+export default function AddProduct({ handleClose, fetchProduct, product }) {
+    const [category, setCategory] = useState(product?.catName);
     const [categories, setCategories] = useState([]);
-    const [name, setName] = useState("");
-    const [unitPrice, setUnitPrice] = useState("");
-    const [description, setDescription] = useState("");
-    const [imgURL, setImgURL] = useState("");
-    const [inStock, setInStock] = useState("");
+    const [name, setName] = useState(product?.productName);
+    const [unitPrice, setUnitPrice] = useState(product?.unitPrice);
+    const [description, setDescription] = useState(product?.productDescription);
+    const [imgURL, setImgURL] = useState(product?.imgURL);
+    const [inStock, setInStock] = useState(product?.productQuantity);
 
     const fetchCategories = useCallback(async () => {
         const result = await axios.get("/api/categories");
@@ -37,40 +33,21 @@ export default function AddProduct({ handleClose, fetchProducts }) {
         event.preventDefault();
 
         let catID;
+
         categories?.forEach((cat) => {
             if (cat.name === category) {
                 catID = cat.ID;
             }
         });
-
-        try {
-            const response = await axios.post("/api/product/add", {
-                name,
-                unitPrice,
-                description,
-                imgURL,
-                inStock,
-                catID,
-            });
-
-            if (response.data.output !== 0) {
-                setError(true);
-                setTimeout(() => {
-                    setError(false);
-                }, 1000);
-                return;
-            }
-        } catch (error) {
-            console.log(error);
-        }
-        setName("");
-        setUnitPrice("");
-        setDescription("");
-        setImgURL("");
-        setInStock("");
-        setCategory("");
-        handleClose();
-        fetchProducts();
+        await axios.post(`/api/product/edit`, {
+            pid: product.productID,
+            name,
+            description,
+            unitPrice,
+            inStock,
+            catID,
+            imgURL,
+        });
     };
     return (
         <Container component="main" maxWidth="sm">
@@ -83,11 +60,15 @@ export default function AddProduct({ handleClose, fetchProducts }) {
                 }}
             >
                 <Typography sx={{ mt: 1, mb: 3 }} component="h1" variant="h4">
-                    Add Product
+                    Edit Product
                 </Typography>
                 <Box
                     component="form"
-                    onSubmit={handleSubmit}
+                    onSubmit={(event) =>
+                        handleSubmit(event)
+                            .then(() => handleClose())
+                            .then(() => fetchProduct())
+                    }
                     noValidate
                     sx={{ mt: 1 }}
                 >
@@ -214,14 +195,6 @@ export default function AddProduct({ handleClose, fetchProducts }) {
                     </Button>
                 </Box>
             </Box>
-
-            <Stack sx={{ mt: 2, width: "100%" }} spacing={2}>
-                {error && (
-                    <Alert severity="error">
-                        Error occurred! Please try again.
-                    </Alert>
-                )}
-            </Stack>
         </Container>
     );
 }

@@ -23,12 +23,17 @@ import SearchIcon from "@mui/icons-material/Search";
 import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link, useNavigate } from "react-router-dom";
-import { SearchContext, UserContext, CategoryContext } from "../App";
+import {
+    SearchContext,
+    UserContext,
+    CategoryContext,
+    AuthContext,
+} from "../App";
 import axios from "../lib/axios";
 import { filterByCategory, fetchProducts } from "../pages/Home";
 
 const SETTINGS = ["Profile", "Wishlist"];
-let authState, fetchCategories;
+let fetchCategories;
 
 const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -90,6 +95,7 @@ const Navbar = ({ countCart }) => {
     const { setSearch } = useContext(SearchContext);
     const { username, setUsername } = useContext(UserContext);
     const { setCategory } = useContext(CategoryContext);
+    const { authState, setAuthState } = useContext(AuthContext);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -136,11 +142,11 @@ const Navbar = ({ countCart }) => {
 
     useEffect(() => {
         if (username !== null) {
-            authState = "Logout";
+            setAuthState("Logout");
         } else {
-            authState = "Login";
+            setAuthState("Login");
         }
-    }, [username]);
+    }, [username, setAuthState]);
 
     useEffect(() => {
         fetchCategories();
@@ -275,7 +281,7 @@ const Navbar = ({ countCart }) => {
                         <Link to="/cart">
                             <IconButton size="large">
                                 <StyledBadge
-                                    badgeContent={countCart}
+                                    badgeContent={username && countCart}
                                     color="success"
                                 >
                                     <ShoppingCartIcon sx={{ color: "#fff" }} />

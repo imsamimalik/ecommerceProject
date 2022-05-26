@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -17,6 +17,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Snackbar from "@mui/material/Snackbar";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { UserContext } from "../App";
 
 const METHODS = ["COD", "Wallet"];
 
@@ -29,7 +30,7 @@ export default function Checkout({ fetchCount }) {
     const [orderID, setOrderID] = useState(false);
     const [text, setText] = useState("invalid coupon");
 
-    let username = localStorage.getItem("username");
+    const { username } = useContext(UserContext);
 
     const fetchCart = useCallback(async () => {
         await axios.post("/api/cart", { username }).then((res) => {
@@ -122,10 +123,11 @@ export default function Checkout({ fetchCount }) {
                     <Typography sx={{ mt: 3 }} component="h1" variant="h4">
                         {!orderID ? "Checkout" : "Your order has been placed!"}
                     </Typography>
+
                     {!orderID ? (
                         <Box
                             component="form"
-                            onSubmit={async (event) => {}}
+                            // onSubmit={async (event) => {}}
                             noValidate
                             sx={{
                                 mt: 1,
@@ -135,118 +137,134 @@ export default function Checkout({ fetchCount }) {
                                 flexDirection: "column",
                             }}
                         >
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                    mt: 2,
-                                }}
-                            >
-                                <Typography>Payment Method</Typography>
-                                <FormControl
-                                    variant="standard"
-                                    sx={{ m: 1, minWidth: 120 }}
-                                >
-                                    <InputLabel id="categories">
-                                        Payment
-                                    </InputLabel>
-                                    <Select
-                                        labelId="categories"
-                                        value={payment}
-                                        label="Category"
-                                        onChange={(event) => {
-                                            setPayment(event.target.value);
+                            {cart.length > 0 ? (
+                                <>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            mt: 2,
                                         }}
                                     >
-                                        {METHODS.map((method) => (
-                                            <MenuItem
-                                                value={method.toLowerCase()}
-                                                key={method}
+                                        <Typography>Payment Method</Typography>
+                                        <FormControl
+                                            variant="standard"
+                                            sx={{ m: 1, minWidth: 120 }}
+                                        >
+                                            <InputLabel id="categories">
+                                                Payment
+                                            </InputLabel>
+                                            <Select
+                                                labelId="categories"
+                                                value={payment}
+                                                label="Category"
+                                                onChange={(event) => {
+                                                    setPayment(
+                                                        event.target.value
+                                                    );
+                                                }}
                                             >
-                                                {method}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Box>
+                                                {METHODS.map((method) => (
+                                                    <MenuItem
+                                                        value={method.toLowerCase()}
+                                                        key={method}
+                                                    >
+                                                        {method}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Box>
 
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                    mt: 2,
-                                }}
-                            >
-                                <Typography>Coupon Code</Typography>
-                                <TextField
-                                    autoComplete="off"
-                                    sx={{ width: "15ch" }}
-                                    InputProps={{
-                                        endAdornment: coupon && (
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    onClick={(event) =>
-                                                        getDiscount(event)
-                                                    }
-                                                >
-                                                    <SendIcon />
-                                                </IconButton>
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                    variant="standard"
-                                    placeholder="Coupon Code"
-                                    value={coupon}
-                                    onChange={(event) => {
-                                        setCoupon(event.target.value);
-                                    }}
-                                />
-                            </Box>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            mt: 2,
+                                        }}
+                                    >
+                                        <Typography>Coupon Code</Typography>
+                                        <TextField
+                                            autoComplete="off"
+                                            sx={{ width: "15ch" }}
+                                            InputProps={{
+                                                endAdornment: coupon && (
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            onClick={(event) =>
+                                                                getDiscount(
+                                                                    event
+                                                                )
+                                                            }
+                                                        >
+                                                            <SendIcon />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                ),
+                                            }}
+                                            variant="standard"
+                                            placeholder="Coupon Code"
+                                            value={coupon}
+                                            onChange={(event) => {
+                                                setCoupon(event.target.value);
+                                            }}
+                                        />
+                                    </Box>
 
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                    mt: 4,
-                                }}
-                            >
-                                <Typography>Discount</Typography>
-                                <Typography>{discount} %</Typography>
-                            </Box>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            mt: 4,
+                                        }}
+                                    >
+                                        <Typography>Discount</Typography>
+                                        <Typography>{discount} %</Typography>
+                                    </Box>
 
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                    mt: 5,
-                                }}
-                            >
-                                <Typography variant="h5">Total</Typography>
-                                <Typography variant="h5">
-                                    Rs.
-                                    {calcPrice()}
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            mt: 5,
+                                        }}
+                                    >
+                                        <Typography variant="h5">
+                                            Total
+                                        </Typography>
+                                        <Typography variant="h5">
+                                            Rs.
+                                            {calcPrice()}
+                                        </Typography>
+                                    </Box>
+
+                                    <Button
+                                        fullWidth
+                                        variant="contained"
+                                        onClick={() =>
+                                            placeOrder().then(() =>
+                                                fetchCount()
+                                            )
+                                        }
+                                        sx={{
+                                            mt: 3,
+                                            mb: 2,
+                                            width: "50%",
+                                            alignSelf: "center",
+                                        }}
+                                    >
+                                        Confirm Order
+                                    </Button>
+                                </>
+                            ) : (
+                                <Typography sx={{ marginTop: 3 }}>
+                                    Your cart is empty.
                                 </Typography>
-                            </Box>
-
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                onClick={() =>
-                                    placeOrder().then(() => fetchCount())
-                                }
-                                sx={{
-                                    mt: 3,
-                                    mb: 2,
-                                    width: "50%",
-                                    alignSelf: "center",
-                                }}
-                            >
-                                Confirm Order
-                            </Button>
+                            )}
                         </Box>
                     ) : (
                         <Typography sx={{ marginTop: 3 }}>

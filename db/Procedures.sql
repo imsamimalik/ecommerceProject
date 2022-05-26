@@ -174,6 +174,27 @@ end
 go
 
 
+create procedure editProduct
+@pid int,
+@name varchar(50),
+@desc varchar(50),
+@price int,
+@stock int,
+@cid int,
+@img varchar(50)
+as
+begin
+	if exists(select * from Product where ID = @pid)
+	begin
+		update Product
+		set name = @name, description = @desc, unitPrice=@price,
+		quantityInStock=@stock, catID=@cid, imgURL = @img
+		where ID=@pid
+	end
+end
+go
+
+
 
 ---------------------------------------------------------------
 ---------------------------   USER   --------------------------
@@ -278,6 +299,48 @@ begin
 		print 'user is not blacklisted'
 		set @out = 0
 	end
+end
+go
+
+create procedure addToBlacklist
+@uid integer,
+@desc varchar(50),
+@out int output
+as
+begin
+
+	if exists(select ID from Users where ID= @uid)
+	begin
+		insert into BlackList values(@uid, @desc)
+		set @out =0
+	end
+	else
+	begin
+		set @out = 1
+		print 'user does not exist'
+	end
+
+end
+go
+
+
+create procedure removeFromBlackList
+@uid integer,
+@out int output
+as
+begin
+
+	if exists(select userID from BlackList where userID= @uid)
+	begin
+		delete from BlackList where userID= @uid
+		set @out =0
+	end
+	else
+	begin
+		set @out = 1
+		print 'user does not exist'
+	end
+
 end
 go
 

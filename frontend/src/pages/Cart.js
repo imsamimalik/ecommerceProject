@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -10,6 +10,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Badge from "@mui/material/Badge";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
+import { UserContext } from "../App";
 
 import axios from "../lib/axios";
 
@@ -17,7 +18,7 @@ const Cart = ({ fetchCount }) => {
     const [cart, setCart] = useState([]);
     const [open, setOpen] = useState(false);
 
-    let username = localStorage.getItem("username");
+    const { username } = useContext(UserContext);
 
     const fetchCart = useCallback(async () => {
         username &&
@@ -100,14 +101,14 @@ const Cart = ({ fetchCount }) => {
                                 marginLeft: "auto",
                             }}
                         >
-                            <IconButton>
-                                <AddShoppingCartIcon
-                                    onClick={() =>
-                                        addToCart(item.productID).then(
-                                            fetchCart().then(() => fetchCount())
-                                        )
-                                    }
-                                />
+                            <IconButton
+                                onClick={() =>
+                                    addToCart(item.productID).then(
+                                        fetchCart().then(() => fetchCount())
+                                    )
+                                }
+                            >
+                                <AddShoppingCartIcon />
                             </IconButton>
                             <IconButton
                                 onClick={() =>

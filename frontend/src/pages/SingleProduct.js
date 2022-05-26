@@ -1,6 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
-import { useParams } from "react-router-dom";
-import axios from "../lib/axios";
+import { useEffect, useState, useCallback, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -9,7 +8,12 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import { styled } from "@mui/material/styles";
 import CommentInput from "../components/CommentInput";
+import axios from "../lib/axios";
 import Comment from "../components/Comment";
+import { UserContext } from "../App";
+import Modal from "@mui/material/Modal";
+import EditProduct from "../components/EditProduct";
+import { deleteProduct } from "../components/ProductCard";
 
 const ProductContainer = styled(Container)(({ theme }) => ({
     marginTop: "50px",
@@ -22,9 +26,21 @@ const ProductContainer = styled(Container)(({ theme }) => ({
         flexDirection: "row",
     },
 }));
+const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 2,
+};
 
 const SingleProduct = ({ fetchCount }) => {
     let { id } = useParams();
+    let navigate = useNavigate();
     const [product, setProduct] = useState({});
     const [value, setValue] = useState(1);
     const [open, setOpen] = useState(false);
@@ -32,8 +48,12 @@ const SingleProduct = ({ fetchCount }) => {
     const [rating, setRating] = useState(0);
     const [reviewsList, setReviewsList] = useState([]);
     const [reviewAllowed, setReviewAllowed] = useState(false);
+    const [modal, setModal] = useState(false);
 
-    let username = localStorage.getItem("username");
+    const handleOpen = () => setModal(true);
+    const handleClose = () => setModal(false);
+
+    const { username } = useContext(UserContext);
 
     const fetchProduct = useCallback(async () => {
         const result = await axios.post(`/api/singleProduct`, { id });
@@ -156,6 +176,7 @@ const SingleProduct = ({ fetchCount }) => {
                     >
                         <Button
                             fullWidth
+                            color="success"
                             size="large"
                             variant="contained"
                             disabled={product.productQuantity === 0}
@@ -164,6 +185,37 @@ const SingleProduct = ({ fetchCount }) => {
                             Add to cart
                         </Button>
                     </Box>
+
+                    {process.env.REACT_APP_USERNAME === username && (
+                        <Box
+                            sx={{
+                                mt: 3,
+                                display: "flex",
+                                justifyContent: "space-evenly",
+                            }}
+                        >
+                            <Button
+                                size="large"
+                                variant="contained"
+                                disabled={product.productQuantity === 0}
+                                onClick={() => handleOpen()}
+                            >
+                                EditProduct
+                            </Button>
+
+                            <Button
+                                size="large"
+                                color="error"
+                                variant="contained"
+                                disabled={product.productQuantity === 0}
+                                onClick={() =>
+                                    deleteProduct(id).then(() => navigate("/"))
+                                }
+                            >
+                                DeleteProduct
+                            </Button>
+                        </Box>
+                    )}
 
                     <Typography sx={{ mt: 3 }} variant="subtitle1">
                         {/* {product.productDescription} */}
@@ -178,6 +230,18 @@ const SingleProduct = ({ fetchCount }) => {
                         elit.
                     </Typography>
                 </Box>
+
+                <Modal open={modal} onClose={handleClose}>
+                    <Box sx={style}>
+                        <EditProduct
+                            product={product}
+                            edit
+                            handleClose={handleClose}
+                            fetchProduct={fetchProduct}
+                        />
+                    </Box>
+                </Modal>
+
                 <Snackbar open={open} message="added to cart" />
             </ProductContainer>
             <Container

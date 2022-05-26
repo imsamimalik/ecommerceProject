@@ -15,6 +15,8 @@ import Snackbar from "@mui/material/Snackbar";
 import { Link } from "react-router-dom";
 import axios from "../lib/axios";
 
+let deleteProduct;
+
 export default function ProductCard({
     name,
     price,
@@ -63,25 +65,28 @@ export default function ProductCard({
         }, 1000);
     }, [productID, username]);
 
-    const deleteProduct = useCallback(async () => {
-        const result = await axios.delete("/api/product/delete", {
-            data: {
-                productID,
-                username,
-            },
-        });
+    deleteProduct = useCallback(
+        async (productID) => {
+            const result = await axios.delete("/api/product/delete", {
+                data: {
+                    productID,
+                    username,
+                },
+            });
 
-        if (result.data.output !== 0) {
-            setText("unable to delete product");
-        } else {
-            setText("product deleted");
-        }
-        setOpen(true);
+            if (result.data.output !== 0) {
+                setText("unable to delete product");
+            } else {
+                setText("product deleted");
+            }
+            setOpen(true);
 
-        setTimeout(() => {
-            setOpen(false);
-        }, 1000);
-    }, [productID, username]);
+            setTimeout(() => {
+                setOpen(false);
+            }, 1000);
+        },
+        [username]
+    );
 
     useEffect(() => {}, []);
 
@@ -92,13 +97,20 @@ export default function ProductCard({
                     action={
                         <IconButton
                             onClick={() =>
-                                deleteProduct().then(() => fetchProducts())
+                                deleteProduct(productID).then(() =>
+                                    fetchProducts()
+                                )
                             }
                         >
                             <DeleteIcon sx={{ color: "secondary.main" }} />
                         </IconButton>
                     }
-                    sx={{ position: "absolute", top: 0, right: 0, zIndex: 100 }}
+                    sx={{
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        zIndex: 100,
+                    }}
                 />
             )}
             <Link to={`/product/${productID}`}>
@@ -152,3 +164,4 @@ export default function ProductCard({
         </Card>
     );
 }
+export { deleteProduct };

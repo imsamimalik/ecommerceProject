@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -7,7 +7,7 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import Snackbar from "@mui/material/Snackbar";
-
+import { UserContext } from "../App";
 import axios from "../lib/axios";
 
 const Wishlist = ({ fetchCount }) => {
@@ -15,7 +15,7 @@ const Wishlist = ({ fetchCount }) => {
     const [open, setOpen] = useState(false);
     const [text, setText] = useState("added to wishlist");
 
-    let username = localStorage.getItem("username");
+    const { username } = useContext(UserContext);
 
     const fetchWishlist = useCallback(async () => {
         await axios.post("/api/wishlist", { username }).then((res) => {
@@ -25,8 +25,8 @@ const Wishlist = ({ fetchCount }) => {
     }, [username]);
 
     useEffect(() => {
-        fetchWishlist();
-    }, [fetchWishlist]);
+        username && fetchWishlist();
+    }, [username, fetchWishlist]);
 
     const deletefromWishlist = async (productID) => {
         const result = await axios.delete("/api/wishlist/delete", {

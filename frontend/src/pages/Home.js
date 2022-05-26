@@ -4,14 +4,14 @@ import Grid from "@mui/material/Grid";
 import ProductCard from "../components/ProductCard";
 import FAB from "../components/FAB";
 import axios from "../lib/axios";
-import { SearchContext, CategoryContext } from "../App";
+import { SearchContext, CategoryContext, UserContext } from "../App";
 let filterByCategory, fetchProducts;
 const Home = ({ fetchCount }) => {
     const [products, setProducts] = useState([]);
-    const [username, setUsername] = useState(null);
 
     const { search } = useContext(SearchContext);
     const { category } = useContext(CategoryContext);
+    const { username, setUsername } = useContext(UserContext);
 
     fetchProducts = useCallback(async () => {
         await axios.get(`/api`, { params: { search } }).then((res) => {
@@ -33,7 +33,7 @@ const Home = ({ fetchCount }) => {
 
     useEffect(() => {
         setUsername(localStorage.getItem("username"));
-    }, []);
+    }, [setUsername]);
 
     return (
         <>

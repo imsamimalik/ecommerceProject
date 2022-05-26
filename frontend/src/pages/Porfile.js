@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
@@ -10,30 +10,23 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
-import AddIcon from "@mui/icons-material/Add";
-import InputAdornment from "@mui/material/InputAdornment";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { fetchCategories } from "../components/Navbar";
-let uname = localStorage.getItem("username");
+
+import { UserContext } from "../App";
+import Admin from "../components/Admin";
 
 export default function Profile() {
     const [user, setUser] = useState("");
     const [reviews, setReviews] = useState([]);
     const [orders, setOrders] = useState([]);
-    const [category, setCategory] = useState("");
-    const [coupons, setCoupons] = useState("");
-    const [couponName, setCouponName] = useState("");
-    const [couponCode, setCouponCode] = useState("");
-    const [couponDiscount, setCouponDiscount] = useState("");
+
+    const { username: uname } = useContext(UserContext);
 
     const fetchUser = useCallback(async () => {
         await axios.post(`api/user`, { username: uname }).then((res) => {
             console.log(res.data);
             setUser(res.data[0]);
         });
-    }, []);
+    }, [uname]);
 
     const fetchReviews = useCallback(async () => {
         let _username = user?.username;
@@ -82,69 +75,17 @@ export default function Profile() {
         [fetchOrders]
     );
 
-    const addCategory = useCallback(async () => {
-        category &&
-            (await axios
-                .post(`/api/category/add`, {
-                    catName: category,
-                })
-                .then((res) => {
-                    console.log(res.data);
-                    setCategory("");
-                })
-                .then(() => fetchCategories()));
-    }, [category]);
-
-    const fetchCoupons = useCallback(async () => {
-        await axios.get(`/api/coupon`).then((res) => {
-            console.log(res.data);
-            setCoupons(res.data);
-        });
-    }, []);
-
-    const addCoupon = useCallback(async () => {
-        if (couponName && couponCode && couponDiscount) {
-            await axios
-                .post(`/api/coupon/add`, {
-                    couponName,
-                    couponCode,
-                    couponDiscount,
-                })
-                .then((res) => {
-                    console.log(res.data);
-                    setCouponName("");
-                    setCouponCode("");
-                    setCouponDiscount("");
-                });
-        }
-    }, [couponName, couponCode, couponDiscount]);
-
-    const deleteCoupon = useCallback(async (code) => {
-        await axios
-            .post(`/api/coupon/delete`, {
-                code,
-            })
-            .then((res) => {
-                console.log(res.data);
-            });
-    }, []);
-
     useEffect(() => {
         uname && fetchUser();
-    }, [fetchUser]);
+    }, [fetchUser, uname]);
 
     useEffect(() => {
         uname && fetchReviews();
-    }, [fetchReviews]);
+    }, [fetchReviews, uname]);
 
     useEffect(() => {
         uname && fetchOrders();
-    }, [fetchOrders]);
-
-    useEffect(() => {
-        fetchCoupons();
-    }, [fetchCoupons]);
-
+    }, [fetchOrders, uname]);
     return (
         <>
             <Box
@@ -154,6 +95,10 @@ export default function Profile() {
                 alignItems="center"
                 gap={2}
             >
+                {
+                process.env.REACT_APP_USERNAME === uname && 
+                    <Admin />
+                }
                 {uname ? (
                     <>
                         <Box
@@ -189,137 +134,6 @@ export default function Profile() {
                             <Typography variant="h6">
                                 Address: {user.address}
                             </Typography>
-                            {user.username ===
-                                process.env.REACT_APP_USERNAME && (
-                                <>
-                                    <Box sx={{ my: 2 }}>
-                                        <TextField
-                                            value={category}
-                                            onChange={(e) =>
-                                                setCategory(e.target.value)
-                                            }
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        <IconButton
-                                                            onClick={() =>
-                                                                addCategory()
-                                                            }
-                                                        >
-                                                            <AddIcon />
-                                                        </IconButton>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                            placeholder="add category"
-                                        />
-                                    </Box>
-                                    <Box sx={{ px: 4 }}>
-                                        <Typography
-                                            color="primary.main "
-                                            variant="h5"
-                                        >
-                                            Coupons
-                                        </Typography>
-
-                                        <Box>
-                                            {coupons?.map((coupon) => (
-                                                <Button
-                                                    sx={{ m: 1 }}
-                                                    variant="outlined"
-                                                    startIcon={
-                                                        <IconButton
-                                                            onClick={() =>
-                                                                deleteCoupon(
-                                                                    coupon.code
-                                                                ).then(() =>
-                                                                    fetchCoupons()
-                                                                )
-                                                            }
-                                                        >
-                                                            <DeleteIcon />
-                                                        </IconButton>
-                                                    }
-                                                >
-                                                    {coupon.code}
-                                                </Button>
-                                            ))}
-                                        </Box>
-
-                                        <Accordion
-                                            sx={{
-                                                border: "1px solid lightgrey",
-                                                mt: 2,
-                                                mb: 5,
-                                                mr: 1,
-                                                flex: 1,
-                                            }}
-                                        >
-                                            <AccordionSummary
-                                                expandIcon={<ExpandMoreIcon />}
-                                            >
-                                                <Typography>
-                                                    Add Coupon
-                                                </Typography>
-                                            </AccordionSummary>
-                                            <AccordionDetails>
-                                                <Box
-                                                    sx={{
-                                                        display: "flex",
-                                                        // flexDirection: "column",
-                                                        // width: "200px",
-                                                        alignItems: "center",
-                                                        justifyContent:
-                                                            "center",
-                                                        flexWrap: "wrap",
-                                                        gap: 1,
-                                                    }}
-                                                >
-                                                    <TextField
-                                                        value={couponName}
-                                                        onChange={(e) =>
-                                                            setCouponName(
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                        placeholder="coupon name"
-                                                    />
-                                                    <TextField
-                                                        value={couponCode}
-                                                        onChange={(e) =>
-                                                            setCouponCode(
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                        placeholder="coupon code"
-                                                    />
-                                                    <TextField
-                                                        value={couponDiscount}
-                                                        onChange={(e) =>
-                                                            setCouponDiscount(
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                        placeholder="coupon discount"
-                                                    />
-                                                    <Button
-                                                        variant="contained"
-                                                        fullWidth
-                                                        onClick={() =>
-                                                            addCoupon().then(
-                                                                () =>
-                                                                    fetchCoupons()
-                                                            )
-                                                        }
-                                                    >
-                                                        Add Coupon
-                                                    </Button>
-                                                </Box>
-                                            </AccordionDetails>
-                                        </Accordion>
-                                    </Box>
-                                </>
-                            )}
                         </Box>
                         <Box
                             sx={{
