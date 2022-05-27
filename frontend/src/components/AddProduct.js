@@ -13,15 +13,20 @@ import FormControl from "@mui/material/FormControl";
 import axios from "../lib/axios";
 
 
-export default function AddProduct({ handleClose, fetchProducts }) {
+export default function AddProduct({
+    handleClose,
+    fetchProducts,
+    edit,
+    product,
+}) {
     const [error, setError] = useState(false);
-    const [category, setCategory] = useState("");
+    const [category, setCategory] = useState(product?.catName);
     const [categories, setCategories] = useState([]);
-    const [name, setName] = useState("");
-    const [unitPrice, setUnitPrice] = useState("");
-    const [description, setDescription] = useState("");
-    const [imgURL, setImgURL] = useState("");
-    const [inStock, setInStock] = useState("");
+    const [name, setName] = useState(product?.productName);
+    const [unitPrice, setUnitPrice] = useState(product?.unitPrice);
+    const [description, setDescription] = useState(product?.productDescription);
+    const [imgURL, setImgURL] = useState(product?.imgURL);
+    const [inStock, setInStock] = useState(product?.productQuantity);
 
     const fetchCategories = useCallback(async () => {
         const result = await axios.get("/api/categories");
@@ -33,7 +38,28 @@ export default function AddProduct({ handleClose, fetchProducts }) {
         fetchCategories();
     }, [fetchCategories]);
 
-    const handleSubmit = async (event) => {
+    const editProduct = async (event) => {
+        event.preventDefault();
+
+        let catID;
+
+        categories?.forEach((cat) => {
+            if (cat.name === category) {
+                catID = cat.ID;
+            }
+        });
+        await axios.post(`/api/product/edit`, {
+            pid: product.productID,
+            name,
+            description,
+            unitPrice,
+            inStock,
+            catID,
+            imgURL,
+        });
+    };
+
+    const addProduct = async (event) => {
         event.preventDefault();
 
         let catID;
@@ -72,6 +98,9 @@ export default function AddProduct({ handleClose, fetchProducts }) {
         handleClose();
         fetchProducts();
     };
+
+    const handleSubmit = edit ? editProduct : addProduct;
+
     return (
         <Container component="main" maxWidth="sm">
             <Box
@@ -87,7 +116,11 @@ export default function AddProduct({ handleClose, fetchProducts }) {
                 </Typography>
                 <Box
                     component="form"
-                    onSubmit={handleSubmit}
+                    onSubmit={(event) =>
+                        handleSubmit(event)
+                            .then(() => handleClose())
+                            .then(() => fetchProducts())
+                    }
                     noValidate
                     sx={{ mt: 1 }}
                 >

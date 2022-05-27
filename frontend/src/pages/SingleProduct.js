@@ -12,7 +12,7 @@ import axios from "../lib/axios";
 import Comment from "../components/Comment";
 import { UserContext } from "../App";
 import Modal from "@mui/material/Modal";
-import EditProduct from "../components/EditProduct";
+import AddProduct from "../components/AddProduct";
 import { deleteProduct } from "../components/ProductCard";
 
 const ProductContainer = styled(Container)(({ theme }) => ({
@@ -218,26 +218,17 @@ const SingleProduct = ({ fetchCount }) => {
                     )}
 
                     <Typography sx={{ mt: 3 }} variant="subtitle1">
-                        {/* {product.productDescription} */}
-                        lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit.lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit.lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit.lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit.lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit.lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit.lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit.lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit.
+                        {product.productDescription}
                     </Typography>
                 </Box>
 
                 <Modal open={modal} onClose={handleClose}>
                     <Box sx={style}>
-                        <EditProduct
+                        <AddProduct
                             product={product}
                             edit
                             handleClose={handleClose}
-                            fetchProduct={fetchProduct}
+                            fetchProducts={fetchProduct}
                         />
                     </Box>
                 </Modal>

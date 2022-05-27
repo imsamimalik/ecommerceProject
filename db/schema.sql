@@ -18,7 +18,7 @@ GO
 CREATE TABLE [Product] (
 	ID integer IDENTITY(1, 1) primary key,
 	name varchar(50) NOT NULL,
-	[description] varchar(50) NOT NULL,
+	[description] varchar(500) NOT NULL,
 	unitPrice int NOT NULL,
 	quantityInStock int NOT NULL,
 	catID int NOT NULL,
