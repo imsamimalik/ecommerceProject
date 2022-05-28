@@ -1,19 +1,15 @@
 const express = require("express");
 const router = express.Router();
+const addCategory = require("./addCategory");
+const filterByCategory = require("./filterByCategory");
+const getCategories = require("./getCategories");
+const deleteCategory = require("./deleteCategory");
 
-router.get("/", async (req, res) => {
-    const db = req.app.get("db");
+router
+    .get("/", getCategories)
+    .post("/", addCategory)
+    .post("/filter", filterByCategory)
+    .delete("/", deleteCategory);
 
-    try {
-        const result = await db.then(
-            (pool) => pool.request().query`select * from Category`
-        );
-        console.table(result.recordset);
-        res.send(result.recordset);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json(error);
-    }
-});
 
 module.exports = router;

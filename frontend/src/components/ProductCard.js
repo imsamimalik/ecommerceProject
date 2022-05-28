@@ -31,7 +31,7 @@ export default function ProductCard({
     const [text, setText] = useState("added to wishlist");
 
     const addToWishlist = useCallback(async () => {
-        const result = await axios.post("/api/wishlist/add", {
+        const result = await axios.post("/api/wishlist/", {
             productID,
             username,
         });
@@ -67,7 +67,7 @@ export default function ProductCard({
 
     deleteProduct = useCallback(
         async (productID) => {
-            const result = await axios.delete("/api/product/delete", {
+            const result = await axios.delete("/api/product/", {
                 data: {
                     productID,
                     username,

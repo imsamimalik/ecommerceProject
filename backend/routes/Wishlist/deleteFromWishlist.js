@@ -1,7 +1,4 @@
-const express = require("express");
-const router = express.Router();
-
-router.delete("/", async (req, res) => {
+const deleteFromWishlist = async (req, res) => {
     const db = req.app.get("db");
 
     const { username, productID } = req.body;
@@ -34,6 +31,6 @@ router.delete("/", async (req, res) => {
         console.error(error);
         res.status(500).json(error);
     }
-});
+};
 
-module.exports = router;
+module.exports = deleteFromWishlist;

@@ -1,8 +1,4 @@
-const express = require("express");
-const router = express.Router();
-const sql = require("mssql");
-
-router.post("/", async (req, res) => {
+const deliverOrder = async (req, res) => {
     const db = req.app.get("db");
 
     const { orderID } = req.body;
@@ -75,6 +71,6 @@ router.post("/", async (req, res) => {
             console.log("Order dispatched");
             res.status(200).json("Order dispatched");
         });
-});
+};
 
-module.exports = router;
+module.exports = deliverOrder;

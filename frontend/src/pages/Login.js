@@ -29,7 +29,7 @@ export default function Login() {
         const password = data.get("password");
 
         try {
-            const response = await axios.post("/api/login", {
+            const response = await axios.post("/api/user/login", {
                 username: _username,
                 password,
             });

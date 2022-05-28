@@ -1,8 +1,6 @@
-const express = require("express");
-const router = express.Router();
 const sql = require("mssql");
 
-router.post("/", async (req, res) => {
+const addCategory = async (req, res) => {
     const db = req.app.get("db");
     const { catName } = req.body;
 
@@ -19,6 +17,6 @@ router.post("/", async (req, res) => {
         console.error(error);
         res.status(500).json(error);
     }
-});
+};
 
-module.exports = router;
+module.exports = addCategory;

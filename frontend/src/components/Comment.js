@@ -20,7 +20,9 @@ const Comment = ({
     fetchReviews,
 }) => {
     const deleteReview = async () => {
-        await axios.post("/api/review/delete", { username, reviewID, pid });
+        await axios.delete("/api/review/", {
+            data: { username, reviewID, pid },
+        });
     };
 
     const { username: uname } = useContext(UserContext);

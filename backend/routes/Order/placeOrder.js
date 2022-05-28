@@ -1,12 +1,10 @@
-const express = require("express");
-const router = express.Router();
 const sql = require("mssql");
 
-router.post("/", async (req, res) => {
+const placeOrder = async (req, res) => {
     const db = req.app.get("db");
 
     const { username, cart, discount, payment } = req.body;
-    let uid, oid, isBlackListed;
+    let uid, oid, isBlacklisted;
 
     const getUID = async () => {
         try {
@@ -35,16 +33,16 @@ router.post("/", async (req, res) => {
                     .execute("placeOrder")
             );
             oid = result.output.oid;
-            isBlackListed = result.output.out;
+            isBlacklisted = result.output.out;
             console.log(oid);
-            console.log("Blacklisted", isBlackListed);
+            console.log("Blacklisted", isBlacklisted);
         } catch (error) {
             console.error(error);
         }
     };
 
     const addProductsToOrder = async () => {
-        if (isBlackListed === 0) {
+        if (isBlacklisted === 0) {
             try {
                 cart.forEach((product) => {
                     db.then((pool) =>
@@ -89,8 +87,8 @@ router.post("/", async (req, res) => {
         .then(() => finalizeOrder())
         .finally(() => {
             console.log("order placed");
-            res.send({ oid });
+            res.send({ oid, isBlacklisted });
         });
-});
+};
 
-module.exports = router;
+module.exports = placeOrder;

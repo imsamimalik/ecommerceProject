@@ -33,7 +33,7 @@ const Cart = ({ fetchCount }) => {
     }, [username, fetchCart]);
 
     const deleteFromCart = async (productID) => {
-        const result = await axios.delete("/api/cart/delete", {
+        const result = await axios.delete("/api/cart/", {
             data: {
                 productID,
                 username,

@@ -1,9 +1,6 @@
-const express = require("express");
-const router = express.Router();
-
-router.post("/", async (req, res) => {
+const singleProduct = async (req, res) => {
     const db = req.app.get("db");
-    const id = +req.body.id;
+    const id = +req.params.id;
 
     try {
         const result = await db.then((pool) =>
@@ -19,6 +16,6 @@ router.post("/", async (req, res) => {
         console.error(error);
         res.status(500).json(error);
     }
-});
+};
 
-module.exports = router;
+module.exports = singleProduct;

@@ -22,7 +22,7 @@ export default function Profile() {
     const { username: uname } = useContext(UserContext);
 
     const fetchUser = useCallback(async () => {
-        await axios.post(`api/user`, { username: uname }).then((res) => {
+        await axios.post(`api/user/`, { username: uname }).then((res) => {
             console.log(res.data);
             setUser(res.data[0]);
         });
@@ -50,27 +50,23 @@ export default function Profile() {
     const fetchOrders = useCallback(async () => {
         let _username = user?.username;
         if (_username === process.env.REACT_APP_USERNAME) _username = "all";
-        await axios
-            .post(`/api/order/getOrders`, { username: _username })
-            .then((res) => {
-                console.log("orders", res.data);
+        await axios.get(`/api/order/${_username}`).then((res) => {
+            console.log("orders", res.data);
 
-                setOrders(groupByKey(res.data, "orderID"));
+            setOrders(groupByKey(res.data, "orderID"));
 
-                console.log(orders);
-            });
+            console.log(orders);
+        });
         // eslint-disable-next-line
     }, [user?.username]);
 
     const deliverOrder = useCallback(
         async (orderID) => {
             console.log("deliverOrder", orderID);
-            await axios
-                .post(`/api/order/deliverOrder`, { orderID })
-                .then((res) => {
-                    console.log(res.data);
-                    fetchOrders();
-                });
+            await axios.post(`/api/order/deliver`, { orderID }).then((res) => {
+                console.log(res.data);
+                fetchOrders();
+            });
         },
         [fetchOrders]
     );
@@ -95,10 +91,7 @@ export default function Profile() {
                 alignItems="center"
                 gap={2}
             >
-                {
-                process.env.REACT_APP_USERNAME === uname && 
-                    <Admin />
-                }
+                {process.env.REACT_APP_USERNAME === uname && <Admin />}
                 {uname ? (
                     <>
                         <Box
@@ -190,6 +183,10 @@ export default function Profile() {
                                                         acc + val.retailPrice,
                                                     0
                                                 )}
+                                            </Typography>
+                                            <Typography variant="h6">
+                                                username:{" "}
+                                                {orders[key][0].username}
                                             </Typography>
                                             <Typography variant="h6">
                                                 orderPlacementDate:{" "}

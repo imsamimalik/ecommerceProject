@@ -13,7 +13,7 @@ import {
     Button,
 } from "@mui/material";
 
-import DeleteIcon from "@mui/icons-material/Delete";
+import Chip from "@mui/material/Chip";
 
 const style = {
     position: "absolute",
@@ -39,22 +39,29 @@ const Admin = () => {
     const [couponDiscount, setCouponDiscount] = useState("");
     const [blacklist, setBlacklist] = useState([]);
     const [uid, setUid] = useState("");
+    const [categories, setCategories] = useState([]);
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
+    const _fetchCategories = useCallback(async () => {
+        const res = await axios.get("/api/category");
+        setCategories(res.data);
+    }, []);
+
     const addCategory = useCallback(async () => {
         category &&
             (await axios
-                .post(`/api/category/add`, {
+                .post(`/api/category/`, {
                     catName: category,
                 })
                 .then((res) => {
                     console.log(res.data);
                     setCategory("");
                 })
-                .then(() => fetchCategories()));
-    }, [category]);
+                .then(() => fetchCategories())
+                .then(() => _fetchCategories()));
+    }, [category, _fetchCategories]);
 
     const fetchCoupons = useCallback(async () => {
         await axios.get(`/api/coupon`).then((res) => {
@@ -63,10 +70,21 @@ const Admin = () => {
         });
     }, []);
 
+    const deleteCategory = async (id) => {
+        const result = await axios.delete(`/api/category/`, {
+            data: { catID: id },
+        });
+
+        if (result.data.output === 0) {
+            fetchCategories();
+            _fetchCategories();
+        }
+    };
+
     const addCoupon = useCallback(async () => {
         if (couponName && couponCode && couponDiscount) {
             await axios
-                .post(`/api/coupon/add`, {
+                .post(`/api/coupon/`, {
                     couponName,
                     couponCode,
                     couponDiscount,
@@ -82,8 +100,8 @@ const Admin = () => {
 
     const deleteCoupon = useCallback(async (code) => {
         await axios
-            .post(`/api/coupon/delete`, {
-                code,
+            .delete(`/api/coupon/`, {
+                data: { code },
             })
             .then((res) => {
                 console.log(res.data);
@@ -100,7 +118,7 @@ const Admin = () => {
     const addToBlacklist = useCallback(async () => {
         uid &&
             (await axios
-                .post(`/api/blacklist/add`, {
+                .post(`/api/blacklist/`, {
                     username: uid,
                 })
                 .then((res) => {
@@ -111,8 +129,8 @@ const Admin = () => {
 
     const deleteFromBlacklist = useCallback(async (uid) => {
         await axios
-            .post(`/api/blacklist/remove`, {
-                uid,
+            .delete(`/api/blacklist/`, {
+                data: { uid },
             })
             .then((res) => {
                 console.log(res.data);
@@ -122,6 +140,10 @@ const Admin = () => {
     useEffect(() => {
         fetchCoupons();
     }, [fetchCoupons]);
+
+    useEffect(() => {
+        _fetchCategories();
+    }, [_fetchCategories]);
 
     useEffect(() => {
         fetchBlacklist();
@@ -169,6 +191,22 @@ const Admin = () => {
                                 }}
                                 placeholder="add category"
                             />
+
+                            <Box sx={{ mt: 2 }}>
+                                {categories?.map((cat) => (
+                                    <Chip
+                                        key={cat.ID}
+                                        sx={{
+                                            m: 1,
+                                            textTransform: "none",
+                                        }}
+                                        color="primary"
+                                        label={cat.name}
+                                        variant="outlined"
+                                        onDelete={() => deleteCategory(cat.ID)}
+                                    ></Chip>
+                                ))}
+                            </Box>
                         </Box>
                         <Box
                             sx={{
@@ -183,24 +221,18 @@ const Admin = () => {
                             </Typography>
                             <Box>
                                 {coupons?.map((coupon) => (
-                                    <Button
+                                    <Chip
                                         key={coupon.code}
                                         sx={{ m: 1, textTransform: "none" }}
-                                        variant="outlined"
-                                        startIcon={
-                                            <IconButton
-                                                onClick={() =>
-                                                    deleteCoupon(
-                                                        coupon.code
-                                                    ).then(() => fetchCoupons())
-                                                }
-                                            >
-                                                <DeleteIcon />
-                                            </IconButton>
+                                        // variant="outlined"
+                                        label={coupon.code}
+                                        color="success"
+                                        onDelete={() =>
+                                            deleteCoupon(coupon.code).then(() =>
+                                                fetchCoupons()
+                                            )
                                         }
-                                    >
-                                        {coupon.code}
-                                    </Button>
+                                    ></Chip>
                                 ))}
                             </Box>
 
@@ -283,29 +315,21 @@ const Admin = () => {
 
                             <Box sx={{ mt: 2 }}>
                                 {blacklist?.map((list) => (
-                                    <Button
+                                    <Chip
                                         key={list.userID}
                                         sx={{
                                             m: 1,
                                             textTransform: "none",
                                         }}
-                                        variant="outlined"
-                                        startIcon={
-                                            <IconButton
-                                                onClick={() =>
-                                                    deleteFromBlacklist(
-                                                        list.userID
-                                                    ).then(() =>
-                                                        fetchBlacklist()
-                                                    )
-                                                }
-                                            >
-                                                <DeleteIcon />
-                                            </IconButton>
+                                        onDelete={() =>
+                                            deleteFromBlacklist(
+                                                list.userID
+                                            ).then(() => fetchBlacklist())
                                         }
-                                    >
-                                        {list.username}
-                                    </Button>
+                                        variant="outlined"
+                                        color="secondary"
+                                        label={list.username}
+                                    />
                                 ))}
                             </Box>
                         </Box>

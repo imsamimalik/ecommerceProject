@@ -18,7 +18,7 @@ const Wishlist = ({ fetchCount }) => {
     const { username } = useContext(UserContext);
 
     const fetchWishlist = useCallback(async () => {
-        await axios.post("/api/wishlist", { username }).then((res) => {
+        await axios.get(`/api/wishlist/${username}`).then((res) => {
             console.log(res.data);
             setWishlist(res.data);
         });
@@ -29,7 +29,7 @@ const Wishlist = ({ fetchCount }) => {
     }, [username, fetchWishlist]);
 
     const deletefromWishlist = async (productID) => {
-        const result = await axios.delete("/api/wishlist/delete", {
+        const result = await axios.delete("/api/wishlist/", {
             data: {
                 productID,
                 username,

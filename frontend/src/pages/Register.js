@@ -29,7 +29,7 @@ export default function SignIn() {
         const postalCode = data.get("postalCode");
         const name = data.get("name");
         try {
-            const response = await axios.post("/api/register", {
+            const response = await axios.post("/api/user/register", {
                 username,
                 password,
                 email,

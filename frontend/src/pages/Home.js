@@ -14,17 +14,19 @@ const Home = ({ fetchCount }) => {
     const { username, setUsername } = useContext(UserContext);
 
     fetchProducts = useCallback(async () => {
-        await axios.get(`/api`, { params: { search } }).then((res) => {
+        await axios.get(`/api/products`, { params: { search } }).then((res) => {
             setProducts(res.data);
             console.log(res.data);
         });
     }, [search]);
 
     filterByCategory = async () => {
-        await axios.post("/api/category/", { catID: category }).then((res) => {
-            setProducts(res.data);
-            console.log(res.data);
-        });
+        await axios
+            .post(`/api/category/filter`, { catID: category })
+            .then((res) => {
+                setProducts(res.data);
+                console.log(res.data);
+            });
     };
 
     useEffect(() => {

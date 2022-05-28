@@ -32,7 +32,7 @@ function App() {
     const fetchCountOfCart = useCallback(async () => {
         username &&
             axios
-                .post("/api/cart/countItems", { username })
+                .post("/api/cart/count", { username })
                 .then((res) => {
                     setTotalCart(res.data.output);
                 })

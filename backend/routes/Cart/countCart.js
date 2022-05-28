@@ -1,8 +1,6 @@
-const express = require("express");
-const router = express.Router();
 const sql = require("mssql");
 
-router.post("/", async (req, res) => {
+const countCart = async (req, res) => {
     const db = req.app.get("db");
     const { username } = req.body;
     let uid;
@@ -12,7 +10,7 @@ router.post("/", async (req, res) => {
                 .request()
                 .query(`SELECT ID FROM Users WHERE username = '${username}'`)
         );
-        uid = result.recordset[0].ID;
+        uid = result.recordset[0]?.ID;
         console.log(uid);
     } catch (error) {
         console.error(error);
@@ -22,7 +20,7 @@ router.post("/", async (req, res) => {
         const result = await db.then((pool) =>
             pool
                 .request()
-                .input("uid", uid)
+                .input("uid", +uid)
                 .output("out", sql.Int, -1)
                 .execute("countCart")
         );
@@ -33,6 +31,6 @@ router.post("/", async (req, res) => {
         console.error(error);
         res.status(500).json(error);
     }
-});
+};
 
-module.exports = router;
+module.exports = countCart;

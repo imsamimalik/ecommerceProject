@@ -1,11 +1,10 @@
-const express = require("express");
-const router = express.Router();
 const sql = require("mssql");
 
-router.post("/", async (req, res) => {
+const deleteReview = async (req, res) => {
     const db = req.app.get("db");
     const { username, reviewID, pid } = req.body;
     let uid = -1;
+
     try {
         const result = await db.then((pool) =>
             pool
@@ -35,6 +34,6 @@ router.post("/", async (req, res) => {
         console.error(error);
         res.status(500).json(error);
     }
-});
+};
 
-module.exports = router;
+module.exports = deleteReview;

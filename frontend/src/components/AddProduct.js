@@ -29,7 +29,7 @@ export default function AddProduct({
     const [inStock, setInStock] = useState(product?.productQuantity);
 
     const fetchCategories = useCallback(async () => {
-        const result = await axios.get("/api/categories");
+        const result = await axios.get("/api/category");
 
         setCategories(result.data);
     }, []);
@@ -48,7 +48,7 @@ export default function AddProduct({
                 catID = cat.ID;
             }
         });
-        await axios.post(`/api/product/edit`, {
+        await axios.put(`/api/product`, {
             pid: product.productID,
             name,
             description,
@@ -70,7 +70,7 @@ export default function AddProduct({
         });
 
         try {
-            const response = await axios.post("/api/product/add", {
+            const response = await axios.post("/api/product/", {
                 name,
                 unitPrice,
                 description,

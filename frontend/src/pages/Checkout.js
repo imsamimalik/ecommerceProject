@@ -49,7 +49,7 @@ export default function Checkout({ fetchCount }) {
     }, [discount, cart]);
 
     const placeOrder = useCallback(async () => {
-        const result = await axios.post("/api/order/placeOrder", {
+        const result = await axios.post("/api/order/", {
             username,
             cart,
             discount,
@@ -59,7 +59,11 @@ export default function Checkout({ fetchCount }) {
         if (result.data.oid > 0) {
             setOrderID(result.data.oid);
         } else {
-            setText("order failed!");
+            if (result.data.isBlacklisted !== 0) {
+                setText("You're blacklisted. Contact your administrator!");
+            } else {
+                setText("order failed!");
+            }
             setError(true);
             setTimeout(() => {
                 setError(false);
@@ -70,22 +74,20 @@ export default function Checkout({ fetchCount }) {
     const getDiscount = useCallback(
         async (e) => {
             e.preventDefault();
-            await axios
-                .post("/api/coupon/getDiscount", { coupon })
-                .then((res) => {
-                    console.log(res.data);
+            await axios.get(`/api/coupon/${coupon}`).then((res) => {
+                console.log(res.data);
 
-                    if (res.data.output === 0) {
-                        setDiscount(res.data.discount);
-                    } else {
-                        setDiscount(0);
-                        setText("invalid coupon");
-                        setError(true);
-                        setTimeout(() => {
-                            setError(false);
-                        }, 1000);
-                    }
-                });
+                if (res.data.output === 0) {
+                    setDiscount(res.data.discount);
+                } else {
+                    setDiscount(0);
+                    setText("invalid coupon");
+                    setError(true);
+                    setTimeout(() => {
+                        setError(false);
+                    }, 1000);
+                }
+            });
         },
         [coupon]
     );

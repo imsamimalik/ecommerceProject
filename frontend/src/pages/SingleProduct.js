@@ -56,7 +56,7 @@ const SingleProduct = ({ fetchCount }) => {
     const { username } = useContext(UserContext);
 
     const fetchProduct = useCallback(async () => {
-        const result = await axios.post(`/api/singleProduct`, { id });
+        const result = await axios.get(`/api/product/${id}`);
         setProduct(result.data[0]);
         console.log(result.data[0]);
     }, [id]);
@@ -80,7 +80,7 @@ const SingleProduct = ({ fetchCount }) => {
         async (e) => {
             e.preventDefault();
             if (review) {
-                const result = await axios.post("/api/review/add", {
+                const result = await axios.post("/api/review/", {
                     username,
                     productID: id,
                     rating,
@@ -96,7 +96,7 @@ const SingleProduct = ({ fetchCount }) => {
     );
 
     const fetchReviews = useCallback(async () => {
-        const result = await axios.post(`/api/review`, { productID: id });
+        const result = await axios.get(`/api/review/${id}`);
         console.log(result.data);
         setReviewsList(result.data);
     }, [id]);

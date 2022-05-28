@@ -1,8 +1,6 @@
-const express = require("express");
-const router = express.Router();
 const sql = require("mssql");
 
-router.post("/", async (req, res) => {
+const deleteCoupon = async (req, res) => {
     const db = req.app.get("db");
 
     const { code } = req.body;
@@ -18,6 +16,6 @@ router.post("/", async (req, res) => {
         console.error(error);
         res.status(500).send(error);
     }
-});
+};
 
-module.exports = router;
+module.exports = deleteCoupon;

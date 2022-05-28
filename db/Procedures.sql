@@ -107,14 +107,14 @@ end
 go
 
 create procedure deleteCategory
-@name varchar(50),
+@cid int,
 @out integer output
 as
 begin
-	if(exists(Select name from Category where name = @name))
+	if(exists(Select ID from Category where ID = @cid))
 	begin
 		delete from Category
-		where name = @name
+		where ID = @cid
 		print 'Category deleted successfully'
 		set @out = 0
 	end

@@ -1,8 +1,6 @@
-const express = require("express");
-const router = express.Router();
 const sql = require("mssql");
 
-router.post("/", async (req, res) => {
+const addReview = async (req, res) => {
     const db = req.app.get("db");
     const { username, productID, rating, review } = req.body;
     let uid = -1;
@@ -36,6 +34,6 @@ router.post("/", async (req, res) => {
         console.error(error);
         res.status(500).json(error);
     }
-});
+};
 
-module.exports = router;
+module.exports = addReview;

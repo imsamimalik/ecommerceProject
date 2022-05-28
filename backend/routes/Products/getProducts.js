@@ -1,13 +1,11 @@
-const getOrders = async (req, res) => {
+const getProducts = async (req, res) => {
     const db = req.app.get("db");
-    const { username } = req.params;
+    const { search } = req.query;
 
-    const getUserOrders = async () => {
+    if (search === "") {
         try {
             const result = await db.then(
-                (pool) =>
-                    pool.request()
-                        .query`select * from userOrdersView where username=${username}`
+                (pool) => pool.request().query`select * from homeProductsView`
             );
             console.table(result.recordset);
             res.send(result.recordset);
@@ -15,12 +13,10 @@ const getOrders = async (req, res) => {
             console.error(error);
             res.status(500).json(error);
         }
-    };
-
-    const getAllOrders = async () => {
+    } else {
         try {
-            const result = await db.then(
-                (pool) => pool.request().query`select * from userOrdersView`
+            const result = await db.then((pool) =>
+                pool.request().input("text", search).execute("searchProduct")
             );
             console.table(result.recordset);
             res.send(result.recordset);
@@ -28,9 +24,7 @@ const getOrders = async (req, res) => {
             console.error(error);
             res.status(500).json(error);
         }
-    };
-
-    username === "all" ? getAllOrders() : getUserOrders();
+    }
 };
 
-module.exports = getOrders;
+module.exports = getProducts;

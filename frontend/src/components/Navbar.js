@@ -136,7 +136,7 @@ const Navbar = ({ countCart }) => {
     };
 
     fetchCategories = useCallback(async () => {
-        const res = await axios.get("/api/categories");
+        const res = await axios.get("/api/category");
         setCategories(res.data);
     }, []);
 

@@ -1,19 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-    const db = req.app.get("db");
+const getBlacklist = require("./getBlacklist");
+const addToBlacklist = require("./addToBlacklist");
+const deleteFromBlacklist = require("./deleteFromBlacklist");
 
-    try {
-        const result = await db.then(
-            (pool) => pool.request().query`select * from blackListView`
-        );
-        console.table(result.recordset);
-        res.send(result.recordset);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json(error);
-    }
-});
+router
+    .get("/", getBlacklist)
+    .post("/", addToBlacklist)
+    .delete("/", deleteFromBlacklist);
 
 module.exports = router;
