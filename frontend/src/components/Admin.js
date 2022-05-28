@@ -2,6 +2,8 @@ import { useState, useCallback, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
+import AdminPanelSettingsRoundedIcon from "@mui/icons-material/AdminPanelSettingsRounded";
+
 import Modal from "@mui/material/Modal";
 import axios from "../lib/axios";
 import { fetchCategories } from "../components/Navbar";
@@ -151,8 +153,8 @@ const Admin = () => {
 
     return (
         <Box sx={{ position: "fixed", bottom: 15, right: 15 }}>
-            <Fab onClick={handleOpen} color="secondary" aria-label="add">
-                <AddIcon />
+            <Fab onClick={handleOpen} color="info" aria-label="add">
+                <AdminPanelSettingsRoundedIcon />
             </Fab>
 
             <Modal open={open} onClose={handleClose}>
@@ -327,7 +329,7 @@ const Admin = () => {
                                             ).then(() => fetchBlacklist())
                                         }
                                         variant="outlined"
-                                        color="secondary"
+                                        color="info"
                                         label={list.username}
                                     />
                                 ))}
