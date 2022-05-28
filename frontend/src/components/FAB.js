@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
@@ -39,4 +39,4 @@ const FAB = ({ fetchProducts }) => {
     );
 };
 
-export default FAB;
+export default memo(FAB);

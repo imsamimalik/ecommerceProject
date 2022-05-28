@@ -1,4 +1,4 @@
-import React from "react";
+import { memo } from "react";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -65,4 +65,4 @@ const CommentInput = ({
     );
 };
 
-export default CommentInput;
+export default memo(CommentInput);

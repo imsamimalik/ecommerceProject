@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState, memo } from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
@@ -17,7 +17,7 @@ import axios from "../lib/axios";
 
 let deleteProduct;
 
-export default function ProductCard({
+const ProductCard = ({
     name,
     price,
     productID,
@@ -26,7 +26,7 @@ export default function ProductCard({
     username,
     fetchCount,
     fetchProducts,
-}) {
+}) => {
     const [open, setOpen] = useState(false);
     const [text, setText] = useState("added to wishlist");
 
@@ -163,5 +163,6 @@ export default function ProductCard({
             <Snackbar open={open} message={text} />
         </Card>
     );
-}
+};
+export default memo(ProductCard);
 export { deleteProduct };

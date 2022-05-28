@@ -4,6 +4,7 @@ import {
     useContext,
     useTransition,
     useCallback,
+    memo,
 } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -350,5 +351,5 @@ const Navbar = ({ countCart }) => {
         </AppBar>
     );
 };
-export default Navbar;
+export default memo(Navbar);
 export { fetchCategories };

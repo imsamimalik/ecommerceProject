@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -12,13 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import axios from "../lib/axios";
 
-
-export default function AddProduct({
-    handleClose,
-    fetchProducts,
-    edit,
-    product,
-}) {
+const AddProduct = ({ handleClose, fetchProducts, edit, product }) => {
     const [error, setError] = useState(false);
     const [category, setCategory] = useState(product?.catName);
     const [categories, setCategories] = useState([]);
@@ -257,4 +251,5 @@ export default function AddProduct({
             </Stack>
         </Container>
     );
-}
+};
+export default memo(AddProduct);
