@@ -174,7 +174,10 @@ export default function SignIn() {
                     <Grid container>
                         <Grid item>
                             <Link to="/login" variant="body2">
-                                {"Already have an account? Sign In"}
+                                Already have an account?{" "}
+                                <span style={{ color: "#2176d1" }}>
+                                    Sign In
+                                </span>
                             </Link>
                         </Grid>
                     </Grid>

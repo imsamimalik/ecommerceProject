@@ -54,23 +54,23 @@ const ProductCard = ({
     }, [productID, username]);
 
     const addToCart = useCallback(async () => {
-        const result =
-            username &&
-            (await axios.post("/api/cart/add", {
+        if (username) {
+            const result = await axios.post("/api/cart/add", {
                 productID,
                 username,
                 quantity: 1,
-            }));
-        if (result.data.output !== 0) {
-            setText("already in cart");
-        } else {
-            setText("added to cart");
-        }
-        setOpen(true);
+            });
+            if (result.data.output !== 0) {
+                setText("already in cart");
+            } else {
+                setText("added to cart");
+            }
+            setOpen(true);
 
-        setTimeout(() => {
-            setOpen(false);
-        }, 1000);
+            setTimeout(() => {
+                setOpen(false);
+            }, 1000);
+        }
     }, [productID, username]);
 
     deleteProduct = useCallback(
@@ -185,7 +185,9 @@ const ProductCard = ({
                     onClick={handleWishlist}
                     aria-label="add to favorites"
                 >
-                    <FavoriteIcon sx={{ color: wishlisted ? "red" : "" }} />
+                    <FavoriteIcon
+                        sx={{ color: username && wishlisted ? "red" : "" }}
+                    />
                 </IconButton>
 
                 <IconButton

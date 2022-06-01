@@ -144,6 +144,7 @@ const Cart = ({ fetchCount }) => {
                 </Typography>
                 <Link to="/checkout">
                     <Button
+                        disabled={!Boolean(cart.length)}
                         sx={{ float: "right", mt: 5 }}
                         size="large"
                         variant="contained"
