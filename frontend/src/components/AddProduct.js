@@ -17,13 +17,15 @@ import axios from "../lib/axios";
 
 const AddProduct = ({ handleClose, fetchProducts, edit, product }) => {
     const [error, setError] = useState(false);
-    const [category, setCategory] = useState(product?.catName);
+    const [category, setCategory] = useState(product?.catName || "");
     const [categories, setCategories] = useState([]);
-    const [name, setName] = useState(product?.productName);
-    const [unitPrice, setUnitPrice] = useState(product?.unitPrice);
-    const [description, setDescription] = useState(product?.productDescription);
-    const [imgURL, setImgURL] = useState(product?.imgURL);
-    const [inStock, setInStock] = useState(product?.productQuantity);
+    const [name, setName] = useState(product?.productName || "");
+    const [unitPrice, setUnitPrice] = useState(product?.unitPrice || "");
+    const [description, setDescription] = useState(
+        product?.productDescription || ""
+    );
+    const [imgURL, setImgURL] = useState(product?.imgURL || "");
+    const [inStock, setInStock] = useState(product?.productQuantity || "");
 
     const fetchCategories = useCallback(async () => {
         const result = await axios.get("/api/category");

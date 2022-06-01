@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState, memo } from "react";
+import { useCallback, useState, memo } from "react";
 
 import {
     Card,
@@ -30,6 +30,8 @@ const ProductCard = ({
     username,
     fetchCount,
     fetchProducts,
+    wishlisted,
+    fetchWishlist,
 }) => {
     const [open, setOpen] = useState(false);
     const [text, setText] = useState("added to wishlist");
@@ -94,7 +96,35 @@ const ProductCard = ({
         [username]
     );
 
-    useEffect(() => {}, []);
+    const deletefromWishlist = async (productID) => {
+        const result = await axios.delete("/api/wishlist/", {
+            data: {
+                productID,
+                username,
+            },
+        });
+
+        if (result.data.output !== 1) {
+            setOpen(true);
+            setText("removed from wishlist");
+        }
+
+        setTimeout(() => {
+            setOpen(false);
+        }, 1000);
+    };
+
+    const handleWishlist = () => {
+        if (username) {
+            wishlisted
+                ? deletefromWishlist(productID)
+                      .then(() => fetchProducts())
+                      .then(() => fetchWishlist())
+                : addToWishlist()
+                      .then(() => fetchProducts())
+                      .then(() => fetchWishlist());
+        }
+    };
 
     return (
         <Card sx={{ maxWidth: 345, marginTop: "30px", position: "relative" }}>
@@ -152,10 +182,10 @@ const ProductCard = ({
                 sx={{ display: "flex", justifyContent: "space-between" }}
             >
                 <IconButton
-                    onClick={username && addToWishlist}
+                    onClick={handleWishlist}
                     aria-label="add to favorites"
                 >
-                    <FavoriteIcon sx={{ color: "red" }} />
+                    <FavoriteIcon sx={{ color: wishlisted ? "red" : "" }} />
                 </IconButton>
 
                 <IconButton

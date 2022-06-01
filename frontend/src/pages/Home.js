@@ -11,6 +11,7 @@ let filterByCategory, fetchProducts;
 
 const Home = ({ fetchCount }) => {
     const [products, setProducts] = useState([]);
+    const [wishlist, setWishlist] = useState([]);
 
     const { search } = useContext(SearchContext);
     const { category } = useContext(CategoryContext);
@@ -32,9 +33,26 @@ const Home = ({ fetchCount }) => {
             });
     };
 
+    const fetchWishlist = useCallback(async () => {
+        username &&
+            (await axios.get(`/api/wishlist/${username}`).then((res) => {
+                console.log(res.data);
+                setWishlist(res.data);
+            }));
+    }, [username]);
+
+    const isWishlisted = useCallback(
+        (productID) => wishlist.some((wish) => wish.productID === productID),
+        [wishlist]
+    );
+
     useEffect(() => {
         fetchProducts();
     }, [search]);
+
+    useEffect(() => {
+        fetchWishlist();
+    }, [fetchWishlist]);
 
     useEffect(() => {
         setUsername(localStorage.getItem("username"));
@@ -55,8 +73,10 @@ const Home = ({ fetchCount }) => {
                     {products.map((product) => (
                         <Grid item key={product.productID}>
                             <ProductCard
+                                wishlisted={isWishlisted(product.productID)}
                                 fetchCount={fetchCount}
                                 fetchProducts={fetchProducts}
+                                fetchWishlist={fetchWishlist}
                                 username={username}
                                 productID={product.productID}
                                 name={product.productName}
