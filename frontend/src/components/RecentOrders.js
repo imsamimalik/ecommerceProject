@@ -9,7 +9,7 @@ import {
     Button,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { UserContext } from "../App";
+import { UserContext } from "../context/UserContext";
 
 import axios from "../lib/axios";
 

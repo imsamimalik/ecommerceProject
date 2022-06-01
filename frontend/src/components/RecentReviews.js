@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useContext, memo } from "react";
 import { Box, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import Comment from "./Comment";
-import { UserContext } from "../App";
+import { UserContext } from "../context/UserContext";
 
 import axios from "../lib/axios";
 

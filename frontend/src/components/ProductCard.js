@@ -1,16 +1,20 @@
 import { useEffect, useCallback, useState, memo } from "react";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
+
+import {
+    Card,
+    CardHeader,
+    CardMedia,
+    CardContent,
+    CardActions,
+    IconButton,
+    Typography,
+    CardActionArea,
+    Snackbar,
+} from "@mui/material";
+
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { CardActionArea } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Snackbar from "@mui/material/Snackbar";
 
 import { Link } from "react-router-dom";
 import axios from "../lib/axios";
@@ -48,11 +52,13 @@ const ProductCard = ({
     }, [productID, username]);
 
     const addToCart = useCallback(async () => {
-        const result = await axios.post("/api/cart/add", {
-            productID,
-            username,
-            quantity: 1,
-        });
+        const result =
+            username &&
+            (await axios.post("/api/cart/add", {
+                productID,
+                username,
+                quantity: 1,
+            }));
         if (result.data.output !== 0) {
             setText("already in cart");
         } else {
@@ -146,7 +152,7 @@ const ProductCard = ({
                 sx={{ display: "flex", justifyContent: "space-between" }}
             >
                 <IconButton
-                    onClick={addToWishlist}
+                    onClick={username && addToWishlist}
                     aria-label="add to favorites"
                 >
                     <FavoriteIcon sx={{ color: "red" }} />

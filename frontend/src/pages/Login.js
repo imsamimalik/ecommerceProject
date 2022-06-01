@@ -1,20 +1,25 @@
 import { useState, useContext } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+import {
+    Avatar,
+    Button,
+    TextField,
+    FormControlLabel,
+    Checkbox,
+    Grid,
+    Box,
+    Typography,
+    Alert,
+    Stack,
+    Container
+} from "@mui/material";
+
 import { Link } from "react-router-dom";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
+
 import axios from "../lib/axios";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../App";
+import { UserContext } from "../context/UserContext";
 
 export default function Login() {
     const [error, setError] = useState(false);

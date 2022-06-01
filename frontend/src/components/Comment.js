@@ -1,13 +1,11 @@
 import { useCallback, memo, useContext } from "react";
-import Box from "@mui/material/Box";
+import { Box, Paper, Typography, Avatar, IconButton } from "@mui/material";
+
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Avatar from "@mui/material/Avatar";
-import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+
 import axios from "../lib/axios";
-import { UserContext } from "../App";
+import { UserContext } from "../context/UserContext";
 
 const Comment = ({
     username,

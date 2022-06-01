@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useContext, memo } from "react";
 import { Box, Typography, Avatar } from "@mui/material";
-import { UserContext } from "../App";
+import { UserContext } from "../context/UserContext";
 import axios from "../lib/axios";
 
 const UserInfo = () => {

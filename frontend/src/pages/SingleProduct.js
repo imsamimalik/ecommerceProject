@@ -1,19 +1,21 @@
 import { useEffect, useState, useCallback, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
+import {
+    Container,
+    Typography,
+    Box,
+    Button,
+    Snackbar,
+    Modal,
+} from "@mui/material";
 import { QuantityPicker } from "react-qty-picker";
-import Button from "@mui/material/Button";
-import Snackbar from "@mui/material/Snackbar";
 import { styled } from "@mui/material/styles";
 import CommentInput from "../components/CommentInput";
 import axios from "../lib/axios";
 import Comment from "../components/Comment";
-import { UserContext } from "../App";
-import Modal from "@mui/material/Modal";
 import AddProduct from "../components/AddProduct";
 import { deleteProduct } from "../components/ProductCard";
+import { UserContext } from "../context/UserContext";
 
 const ProductContainer = styled(Container)(({ theme }) => ({
     marginTop: "50px",
@@ -60,6 +62,14 @@ const SingleProduct = ({ fetchCount }) => {
         setProduct(result.data[0]);
         console.log(result.data[0]);
     }, [id]);
+
+    const addToWishlist = useCallback(async () => {
+        username &&
+            (await axios.post("/api/wishlist/", {
+                productID: id,
+                username,
+            }));
+    }, [id, username]);
 
     const addToCart = useCallback(async () => {
         const result = await axios.post("/api/cart/add", {
@@ -134,19 +144,25 @@ const SingleProduct = ({ fetchCount }) => {
             <ProductContainer maxWidth="lg">
                 <Box
                     sx={{
-                        maxHeight: "550px;",
-                        aspectRatio: "7/6",
+                        maxWidth: { sm: "90vw", md: "33vw" },
+                        width: { sm: "75vw", md: "30vw" },
                         display: "flex",
+                        justifyContent: "center",
                         mr: 2,
                     }}
                 >
                     <img
                         src={`/assets/${product.imgURL}`}
                         alt={product.productName}
-                        style={{ width: "-webkit-fill-available" }}
+                        width="500"
+                        height="600"
+                        style={{
+                            objectFit: "contain",
+                            width: "100%",
+                        }}
                     />
                 </Box>
-                <Box>
+                <Box sx={{ flex: 1 }}>
                     <Typography sx={{ mt: 3 }} variant="body2">
                         {product.catName}
                     </Typography>
@@ -172,6 +188,9 @@ const SingleProduct = ({ fetchCount }) => {
                     <Box
                         sx={{
                             mt: 3,
+                            display: "flex",
+                            justifyContent: "space-between",
+                            gap: 3,
                         }}
                     >
                         <Button
@@ -179,10 +198,22 @@ const SingleProduct = ({ fetchCount }) => {
                             color="success"
                             size="large"
                             variant="contained"
-                            disabled={product.productQuantity === 0}
+                            disabled={
+                                product.productQuantity === 0 || !username
+                            }
                             onClick={() => addToCart().then(() => fetchCount())}
                         >
                             Add to cart
+                        </Button>
+                        <Button
+                            fullWidth
+                            color="primary"
+                            size="large"
+                            variant="contained"
+                            disabled={!username}
+                            onClick={addToWishlist}
+                        >
+                            Add to wishlist
                         </Button>
                     </Box>
 
@@ -191,11 +222,13 @@ const SingleProduct = ({ fetchCount }) => {
                             sx={{
                                 mt: 3,
                                 display: "flex",
-                                justifyContent: "space-evenly",
+                                justifyContent: "space-between",
+                                gap: 3,
                             }}
                         >
                             <Button
                                 size="large"
+                                fullWidth
                                 variant="contained"
                                 disabled={product.productQuantity === 0}
                                 onClick={() => handleOpen()}
@@ -205,6 +238,7 @@ const SingleProduct = ({ fetchCount }) => {
 
                             <Button
                                 size="large"
+                                fullWidth
                                 color="error"
                                 variant="contained"
                                 disabled={product.productQuantity === 0}

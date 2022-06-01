@@ -1,15 +1,18 @@
 import { useState, useEffect, useCallback, memo } from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
+import {
+    Button,
+    TextField,
+    Box,
+    Typography,
+    Container,
+    Alert,
+    Stack,
+    Select,
+    InputLabel,
+    MenuItem,
+    FormControl,
+} from "@mui/material";
+
 import axios from "../lib/axios";
 
 const AddProduct = ({ handleClose, fetchProducts, edit, product }) => {
@@ -106,7 +109,7 @@ const AddProduct = ({ handleClose, fetchProducts, edit, product }) => {
                 }}
             >
                 <Typography sx={{ mt: 1, mb: 3 }} component="h1" variant="h4">
-                    Add Product
+                    {edit ? "Edit" : "Add"} Product
                 </Typography>
                 <Box
                     component="form"

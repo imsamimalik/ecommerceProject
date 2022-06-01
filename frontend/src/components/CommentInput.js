@@ -1,12 +1,13 @@
 import { memo } from "react";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import InputAdornment from "@mui/material/InputAdornment";
+import {
+    TextField,
+    Box,
+    InputAdornment,
+    Rating,
+    Typography,
+    IconButton,
+} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import Rating from "@mui/material/Rating";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-
 const CommentInput = ({
     review,
     setReview,

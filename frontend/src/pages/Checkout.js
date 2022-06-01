@@ -1,23 +1,26 @@
 import { useState, useCallback, useEffect, useContext } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
+import {
+    Avatar,
+    Button,
+    TextField,
+    Box,
+    Typography,
+    Container,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    Paper,
+    InputAdornment,
+    IconButton,
+    Snackbar,
+} from "@mui/material";
+
 import RedeemIcon from "@mui/icons-material/Redeem";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import axios from "../lib/axios";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import Paper from "@mui/material/Paper";
 import SendIcon from "@mui/icons-material/Send";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import Snackbar from "@mui/material/Snackbar";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { UserContext } from "../App";
+import axios from "../lib/axios";
+import { UserContext } from "../context/UserContext";
 
 const METHODS = ["COD", "Wallet"];
 

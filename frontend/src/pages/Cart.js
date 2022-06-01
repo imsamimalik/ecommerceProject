@@ -1,16 +1,20 @@
 import { useState, useEffect, useCallback, useContext } from "react";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
+import {
+    Container,
+    Typography,
+    Box,
+    Paper,
+    IconButton,
+    Snackbar,
+    Badge,
+    Button,
+} from "@mui/material/";
+
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import DeleteIcon from "@mui/icons-material/Delete";
-import IconButton from "@mui/material/IconButton";
-import Snackbar from "@mui/material/Snackbar";
-import Badge from "@mui/material/Badge";
-import Button from "@mui/material/Button";
+
 import { Link } from "react-router-dom";
-import { UserContext } from "../App";
+import { UserContext } from "../context/UserContext";
 
 import axios from "../lib/axios";
 

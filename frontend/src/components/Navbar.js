@@ -6,30 +6,31 @@ import {
     useCallback,
     memo,
 } from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
+import {
+    AppBar,
+    Box,
+    Toolbar,
+    IconButton,
+    Typography,
+    Menu,
+    Container,
+    Avatar,
+    Button,
+    Tooltip,
+    MenuItem,
+    InputBase,
+    Badge,
+} from "@mui/material/";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
 import { styled, alpha } from "@mui/material/styles";
-import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link, useNavigate } from "react-router-dom";
-import {
-    SearchContext,
-    UserContext,
-    CategoryContext,
-    AuthContext,
-} from "../App";
+
+import { UserContext } from "../context/UserContext";
+import { AuthContext } from "../context/AuthContext";
+import { CategoryContext } from "../context/CategoryContext";
+import { SearchContext } from "../context/SearchContext";
 import axios from "../lib/axios";
 import { filterByCategory, fetchProducts } from "../pages/Home";
 
@@ -157,33 +158,11 @@ const Navbar = ({ countCart }) => {
         <AppBar position="static">
             <Container maxWidth="1080px">
                 <Toolbar disableGutters>
-                    <Link
-                        onClick={() => {
-                            fetchProducts();
-                            setInput("");
-                            setSearch("");
-                        }}
-                        to="/"
-                    >
-                        <Typography
-                            variant="h6"
-                            noWrap
-                            sx={{
-                                mr: 2,
-                                display: { xs: "none", md: "flex" },
-                                fontFamily: "monospace",
-                                fontWeight: 700,
-                                color: "#fff",
-                                textDecoration: "none",
-                            }}
-                        >
-                            ecommerce
-                        </Typography>
-                    </Link>
                     {/* mobile menu */}
                     <Box
                         sx={{
                             flexGrow: 1,
+                            alignItems: "center",
                             display: { xs: "flex", md: "none" },
                         }}
                     >
@@ -194,6 +173,7 @@ const Navbar = ({ countCart }) => {
                         >
                             <MenuIcon />
                         </IconButton>
+
                         <Menu
                             id="menu-appbar"
                             anchorEl={anchorElNav}
@@ -228,6 +208,7 @@ const Navbar = ({ countCart }) => {
                             sx={{
                                 height: { xs: "40px" },
                                 marginTop: "3px",
+                                display: { xs: "none", md: "block" },
                             }}
                         >
                             <SearchIconWrapper>
@@ -240,6 +221,30 @@ const Navbar = ({ countCart }) => {
                             />
                         </Search>
                     </Box>
+                    <Link
+                        onClick={() => {
+                            fetchProducts();
+                            setInput("");
+                            setSearch("");
+                        }}
+                        to="/"
+                    >
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            sx={{
+                                mr: 2,
+                                ml: { md: 10 },
+                                display: { md: "flex" },
+                                fontFamily: "monospace",
+                                fontWeight: 700,
+                                color: "#fff",
+                                textDecoration: "none",
+                            }}
+                        >
+                            ecommerce
+                        </Typography>
+                    </Link>
                     {/* Desktop menu */}
                     <Box
                         sx={{

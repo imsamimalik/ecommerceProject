@@ -1,11 +1,14 @@
 import { useState, useEffect, useCallback, useContext } from "react";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
+import { Container, Grid } from "@mui/material";
 import ProductCard from "../components/ProductCard";
-import FAB from "../components/FAB";
 import axios from "../lib/axios";
-import { SearchContext, CategoryContext, UserContext } from "../App";
+import FAB from "../components/FAB";
+import { CategoryContext } from "../context/CategoryContext";
+import { SearchContext } from "../context/SearchContext";
+import { UserContext } from "../context/UserContext";
+
 let filterByCategory, fetchProducts;
+
 const Home = ({ fetchCount }) => {
     const [products, setProducts] = useState([]);
 

@@ -1,15 +1,17 @@
 import { useState } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import { Link } from "react-router-dom";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import {
+    Avatar,
+    Button,
+    TextField,
+    Grid,
+    Box,
+    Typography,
+    Container,
+    Stack,
+    Alert,
+} from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
+import { Link } from "react-router-dom";
 import axios from "../lib/axios";
 import { useNavigate } from "react-router-dom";
 
@@ -89,6 +91,8 @@ export default function SignIn() {
                             justifyContent: "space-between",
                             flex: 1,
                             marginTop: "10px",
+                            gap: { xs: "20px", sm: "10px" },
+                            flexDirection: { xs: "column", sm: "row" },
                         }}
                     >
                         <TextField
@@ -98,9 +102,6 @@ export default function SignIn() {
                             label="Full Name"
                             name="name"
                             autoFocus
-                            sx={{
-                                width: "49%",
-                            }}
                         />
                         <TextField
                             required
@@ -108,9 +109,7 @@ export default function SignIn() {
                             variant="standard"
                             label="Username"
                             name="username"
-                            sx={{
-                                width: "49%",
-                            }}
+                            autoComplete="off"
                         />
                     </Box>
                     <TextField
@@ -131,6 +130,7 @@ export default function SignIn() {
                         name="password"
                         label="Password"
                         type="password"
+                        autoComplete="new-password"
                         sx={{
                             marginTop: "30px",
                         }}
@@ -142,6 +142,8 @@ export default function SignIn() {
                             justifyContent: "space-between",
                             flex: 1,
                             marginTop: "20px",
+                            gap: { xs: "20px", sm: "10px" },
+                            flexDirection: { xs: "column", sm: "row" },
                         }}
                     >
                         <TextField
@@ -150,9 +152,6 @@ export default function SignIn() {
                             variant="standard"
                             name="address"
                             label="Address"
-                            sx={{
-                                width: "49%",
-                            }}
                         />
                         <TextField
                             required
@@ -161,9 +160,6 @@ export default function SignIn() {
                             type="number"
                             name="postalCode"
                             label="Postal Code"
-                            sx={{
-                                width: "49%",
-                            }}
                         />
                     </Box>
                     <Button
