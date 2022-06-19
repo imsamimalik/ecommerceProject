@@ -1,6 +1,5 @@
 # ecommerceProject
 
-<img src="./screenshot.png" alt="screenshot" />
 
 ## Features
   
@@ -33,3 +32,17 @@
 - NodeJS (Express)
 - MS SQL
 - Material UI
+
+<br/>
+
+## Screenshots
+
+<img src="./screenshots/home.png" />
+<img src="./screenshots/login.png" />
+<img src="./screenshots/product.png" />
+<img src="./screenshots/cart.png" />
+<img src="./screenshots/wishlist.png" />
+<img src="./screenshots/checkout.png" />
+<img src="./screenshots/userprofile.png" />
+<img src="./screenshots/admin.png" />
+<img src="./screenshots/addproduct.png" />
